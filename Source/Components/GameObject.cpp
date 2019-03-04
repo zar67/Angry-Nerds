@@ -1,15 +1,30 @@
 #include "GameObject.h"
 #include <Engine/Renderer.h>
 
+/**
+ *   @brief   Deconstrutor
+ *   @details Frees up any dynamically allocated memory (the sprite and physics
+ * components)
+ */
 GameObject::~GameObject()
 {
-  free();
+  freeSprite();
+  freePhysics();
 }
 
+/**
+ *  Allocates and attaches a sprite component to the object.
+ *  Part of this process will attempt to load a texture file.
+ *  If this fails this function will return false and the memory
+ *  allocated, freed.
+ *  @param [in] renderer The renderer used to perform the allocations
+ *  @param [in] texture_file_name The file path to the the texture to load
+ *  @return true if the component is successfully added
+ */
 bool GameObject::addSpriteComponent(ASGE::Renderer* renderer,
                                     const std::string& texture_file_name)
 {
-  free();
+  freeSprite();
 
   sprite_component = new SpriteComponent();
   if (sprite_component->loadSprite(renderer, texture_file_name))
@@ -17,17 +32,62 @@ bool GameObject::addSpriteComponent(ASGE::Renderer* renderer,
     return true;
   }
 
-  free();
+  freeSprite();
   return false;
 }
 
-void GameObject::free()
+/**
+ *   @brief   Frees up sprite component
+ *   @details Frees up the dynamically allocated sprite component
+ *   @return void
+ */
+void GameObject::freeSprite()
 {
   delete sprite_component;
   sprite_component = nullptr;
 }
 
+/**
+ *   @brief   Frees up physics component
+ *   @details Frees up the dynamically allocated physics component
+ *   @return void
+ */
+void GameObject::freePhysics()
+{
+  delete physics_component;
+  physics_component = nullptr;
+}
+
+/**
+ *  Returns the sprite componenent.
+ *  IT IS HIGHLY RECOMMENDED THAT YOU CHECK THE STATUS OF THE POINTER
+ *  IS IS VALID FOR A COMPONENT TO BE NULL AS THEY ARE OPTIONAL!
+ *  @return a pointer to the objects sprite component (if any)
+ */
 SpriteComponent* GameObject::spriteComponent()
 {
   return sprite_component;
+}
+
+/**
+ *  Allocates and attaches a physics component to the object with the given
+ * values for initial velocity, initial angular velocity, mass, width and height
+ *  @return void
+ */
+void GameObject::addPhysicsComponent(
+  vector2 v, float a, float m, float width, float height)
+{
+  freePhysics();
+
+  physics_component = new PhysicsComponent();
+  physics_component->initPhysics(v, a, m, width, height);
+}
+
+/**
+ *  Returns the physics component.
+ *  @return a pointer to the objects physics component (if any)
+ */
+PhysicsComponent* GameObject::physicsComponent()
+{
+  return physics_component;
 }

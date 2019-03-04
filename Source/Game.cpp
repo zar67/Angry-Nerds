@@ -1,12 +1,12 @@
 #include <string>
 
+#include "Game.h"
 #include <Engine/DebugPrinter.h>
 #include <Engine/Input.h>
 #include <Engine/InputEvents.h>
 #include <Engine/Keys.h>
 #include <Engine/Sprite.h>
-
-#include "Game.h"
+#include <iostream>
 
 /**
 *   @brief   Default Constructor.
@@ -60,15 +60,26 @@ bool Angry::init()
 
   if (!loadBackgrounds())
   {
+    std::cout << "Background not loaded" << std::endl;
     return false;
   }
 
   if (!menu_layer.addSpriteComponent(renderer.get(),
                                      "data/Textures/Backdrops/menu.jpg"))
   {
+    std::cout << "Menu not loaded" << std::endl;
     return false;
   }
 
+  if (bird.addSpriteComponent(renderer.get(), "data/Textures/parrot.png"))
+  {
+    bird.setUpBird(10, 60, 40, vector2(0, 0), 0, 50);
+  }
+  else
+  {
+    std::cout << "Bird Sprite not loaded" << std::endl;
+    return false;
+  }
   return true;
 }
 
@@ -178,6 +189,7 @@ void Angry::update(const ASGE::GameTime& game_time)
 
   if (!in_menu)
   {
+    bird.update(game_time.delta.count() / 1000.0f);
   }
 }
 
@@ -199,5 +211,6 @@ void Angry::render(const ASGE::GameTime& game_time)
   else
   {
     renderer->renderSprite(*background_layer.spriteComponent()->getSprite());
+    renderer->renderSprite(*bird.spriteComponent()->getSprite());
   }
 }

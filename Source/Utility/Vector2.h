@@ -6,9 +6,12 @@ struct vector2
   vector2(const vector2& rhs);
 
   // operations
-  vector2 operator*(float scalar);
-  vector2& operator=(const vector2& rhs);
+  void setAs(float x_, float y_);
+  void increaseBy(float x_, float y_);
+  void multiplyBy(float x_, float y_);
+
   void normalise();
+  float crossProduct(vector2 v);
 
   // data
   float x = 0;

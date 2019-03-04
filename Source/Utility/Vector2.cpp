@@ -20,16 +20,38 @@ vector2::vector2(const vector2& rhs)
 }
 
 /**
- *   @brief   Copies a vector.
- *   @details Updates vector2 from an existing.
+ *   @brief   Resets the vector
+ *   @details Will set the x and y values to the values given by the parameters
  *   @return  void
  */
-vector2& vector2::operator=(const vector2& rhs)
+void vector2::setAs(float x_, float y_)
 {
-  this->x = rhs.x;
-  this->y = rhs.y;
+  x = x_;
+  y = y_;
+}
 
-  return *this;
+/**
+ *   @brief   Increases the vector
+ *   @details Will increase the x and y values by the values given by the
+ * parameters
+ *   @return  void
+ */
+void vector2::increaseBy(float x_, float y_)
+{
+  x += x_;
+  y += y_;
+}
+
+/**
+ *   @brief   Scales the vector
+ *   @details Will scale the x and y values by the values given by the
+ * parameters
+ *   @return  void
+ */
+void vector2::multiplyBy(float x_, float y_)
+{
+  x *= x_;
+  y *= y_;
 }
 
 /**
@@ -49,14 +71,12 @@ void vector2::normalise()
 }
 
 /**
- *   @brief   Scales the vector.
- *   @details Uses a single scalar value to adjust the vector.
- *   @return  void
+ *   @brief   Cross Product
+ *   @details Will get the scalar cross product of this vector and the one given
+ * in the parameter
+ *   @return  The scalar
  */
-vector2 vector2::operator*(float scalar)
+float vector2::crossProduct(vector2 v)
 {
-  vector2 vec(*this);
-  vec.x *= scalar;
-  vec.y *= scalar;
-  return vec;
+  return (x * v.y) - (y * v.x);
 }
