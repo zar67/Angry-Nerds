@@ -11,7 +11,7 @@ struct vector2
   void multiplyBy(float x_, float y_);
 
   void normalise();
-  float crossProduct(vector2 v);
+  float crossProduct(vector2 vector);
 
   // data
   float x = 0;

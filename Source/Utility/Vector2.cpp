@@ -76,7 +76,7 @@ void vector2::normalise()
  * in the parameter
  *   @return  The scalar
  */
-float vector2::crossProduct(vector2 v)
+float vector2::crossProduct(vector2 vector)
 {
-  return (x * v.y) - (y * v.x);
+  return (x * vector.y) - (y * vector.x);
 }

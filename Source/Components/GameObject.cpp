@@ -74,13 +74,17 @@ SpriteComponent* GameObject::spriteComponent()
  * values for initial velocity, initial angular velocity, mass, width and height
  *  @return void
  */
-void GameObject::addPhysicsComponent(
-  vector2 v, float a, float m, float width, float height)
+void GameObject::addPhysicsComponent(vector2 velocity,
+                                     float angular_velocity,
+                                     float mass,
+                                     float width,
+                                     float height)
 {
   freePhysics();
 
   physics_component = new PhysicsComponent();
-  physics_component->initPhysics(v, a, m, width, height);
+  physics_component->initPhysics(
+    velocity, angular_velocity, mass, width, height);
 }
 
 /**

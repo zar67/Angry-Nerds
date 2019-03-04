@@ -25,10 +25,7 @@ vector2 Circle::AABBCollision(Rectangle rectangle)
   {
     return vector2(closest_x, closest_y);
   }
-  else
-  {
-    return vector2(0, 0);
-  }
+  return vector2(0, 0);
 }
 
 /**
@@ -53,8 +50,5 @@ vector2 Circle::CircleCollision(Circle circle)
 
     return vector2(intersection_x, intersection_y);
   }
-  else
-  {
-    return vector2(0, 0);
-  }
+  return vector2(0, 0);
 }

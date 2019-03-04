@@ -31,20 +31,14 @@ vector2 Rectangle::AABBCollision(Rectangle rectangle)
         return vector2(x, y + (height / 2));
       }
     }
-    else
+    // Intersected on top or bottom side
+    if (delta_y > 0)
     {
-      // Intersected on top or bottom side
-      if (delta_y > 0)
-      {
-        // intersected on top side
-        return vector2(x + (width / 2), y);
-      }
-      else
-      {
-        // intersected on bottom side
-        return vector2(x + (width / 2), y + height);
-      }
+      // intersected on top side
+      return vector2(x + (width / 2), y);
     }
+    // intersected on bottom side
+    return vector2(x + (width / 2), y + height);
   }
   return vector2(0, 0);
 }
@@ -82,12 +76,10 @@ vector2 Rectangle::CircleCollision(Circle circle)
 */
 bool Rectangle::isInside(float x_, float y_) const
 {
-  if (x_ >= this->x && x_ <= this->x + this->width)
+  if (x_ >= this->x && x_ <= this->x + this->width && y_ >= this->y &&
+      y_ <= this->y + this->height)
   {
-    if (y_ >= this->y && y_ <= this->y + this->height)
-    {
-      return true;
-    }
+    return true;
   }
 
   return false;

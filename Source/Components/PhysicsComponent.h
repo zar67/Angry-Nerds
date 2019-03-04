@@ -12,11 +12,12 @@ class PhysicsComponent
  public:
   PhysicsComponent() = default;
   ~PhysicsComponent() = default;
-  void initPhysics(vector2 v, float a, float m, float w, float h);
+  void
+  initPhysics(vector2 velocity, float a_velocity, float m_, float w_, float h_);
   vector2 updatePosition(double delta_time, bool collision);
   float updateRotation(double delta_time, bool collision);
   void addForce(float fx, float fy, vector2 point);
-  void addTorque(float t);
+  void addTorque(float t_);
 
   vector2 linearVelocity() { return linear_velocity; }
   float angularVelocity() { return angular_velocity; }

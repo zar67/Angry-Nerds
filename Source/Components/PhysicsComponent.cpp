@@ -9,13 +9,14 @@
  *   @details Sets the physics attributes to the given values
  *   @return  void
  */
-void PhysicsComponent::initPhysics(vector2 v, float a, float m, float w, float h)
+void PhysicsComponent::initPhysics(
+  vector2 velocity, float a_velocity, float m_, float w_, float h_)
 {
-  linear_velocity = v;
-  angular_velocity = a;
-  mass = m;
-  width = w;
-  height = h;
+  linear_velocity = velocity;
+  angular_velocity = a_velocity;
+  mass = m_;
+  width = w_;
+  height = h_;
 
   inertia = mass * (width * width + height * height) / 12;
 }
@@ -85,7 +86,7 @@ void PhysicsComponent::addForce(float fx, float fy, vector2 point)
  *   @brief   Adds torque
  *   @return  void
  */
-void PhysicsComponent::addTorque(float t)
+void PhysicsComponent::addTorque(float t_)
 {
-  torque += t;
+  torque += t_;
 }
