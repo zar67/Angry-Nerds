@@ -72,6 +72,7 @@ matrix:
           gcc-8 g++-8 libtbb-dev libharfbuzz-bin libharfbuzz-dev libxrandr-dev
           libxi-dev libxinerama-dev libxcursor-dev libgl1-mesa-dev libglu1-mesa-dev
         - ${TRAVIS_BUILD_DIR}/.travis.cache --save
+        - eval "$(curl -sL https://raw.githubusercontent.com/ryuichis/oclint-cpp-travis-ci-examples/master/oclint-ci-install.sh)"
         - cmake CMakeLists.txt
       script:
         - cmake --build .
