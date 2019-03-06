@@ -147,12 +147,9 @@ void Angry::keyHandler(const ASGE::SharedEventData data)
     }
   }
 
-  else if (in_menu)
+  else if (in_menu && key->key == ASGE::KEYS::KEY_SPACE)
   {
-    if (key->key == ASGE::KEYS::KEY_SPACE)
-    {
-      in_menu = !in_menu;
-    }
+    in_menu = !in_menu;
   }
 }
 

@@ -25,14 +25,11 @@ vector2 Rectangle::AABBCollision(Rectangle rectangle)
         // Intersected on right side
         return vector2(x + width, y + (height / 2));
       }
-      else
-      {
-        // Intersected on left side
-        return vector2(x, y + (height / 2));
-      }
+      // Intersected on left side
+      return vector2(x, y + (height / 2));
     }
     // Intersected on top or bottom side
-    if (delta_y > 0)
+    else if (delta_y > 0)
     {
       // intersected on top side
       return vector2(x + (width / 2), y);
@@ -40,6 +37,7 @@ vector2 Rectangle::AABBCollision(Rectangle rectangle)
     // intersected on bottom side
     return vector2(x + (width / 2), y + height);
   }
+
   return vector2(0, 0);
 }
 
@@ -62,10 +60,8 @@ vector2 Rectangle::CircleCollision(Circle circle)
   {
     return vector2(closest_x, closest_y);
   }
-  else
-  {
-    return vector2(0, 0);
-  }
+
+  return vector2(0, 0);
 }
 
 /**

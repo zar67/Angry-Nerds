@@ -34,11 +34,8 @@ bool SpriteComponent::loadSprite(ASGE::Renderer* renderer,
 
 void SpriteComponent::free()
 {
-  if (sprite)
-  {
-    delete sprite;
-    sprite = nullptr;
-  }
+  delete sprite;
+  sprite = nullptr;
 }
 
 /**
