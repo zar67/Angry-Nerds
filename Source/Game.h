@@ -6,7 +6,7 @@
 #include "Components/GameObject.h"
 #include "Utility/Rectangle.h"
 
-const int NUM_OF_BIRDS = 3;
+const int NUM_OF_BIRDS = 6;
 
 /**
  *  An OpenGL Game based on ASGE.
@@ -41,4 +41,6 @@ class Angry : public ASGE::OGLGame
   double mouse_y;
 
   bool in_menu = true;
+  bool game_over = false;
+  bool game_won = false;
 };

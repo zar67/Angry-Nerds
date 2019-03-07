@@ -16,7 +16,8 @@ void Bird::setUpBird(float x_,
                      float r_,
                      vector2 velocity,
                      float angular_velocity,
-                     float mass)
+                     float mass,
+                     float speed_)
 {
   addPhysicsComponent(velocity, angular_velocity, mass, r_, r_);
   spriteComponent()->getSprite()->xPos(x_);
@@ -26,6 +27,7 @@ void Bird::setUpBird(float x_,
   shape.x = x_;
   shape.y = y_;
   shape.radius = r_;
+  speed = speed_;
 }
 
 /**
@@ -40,7 +42,7 @@ bool Bird::collisionDetection()
       physics_component->linearVelocity().y > 0)
   {
     physics_component->linearVelocity(
-      vector2(physics_component->linearVelocity().x,
+      vector2(physics_component->linearVelocity().x * friction,
               -physics_component->linearVelocity().y * friction));
     return true;
   }
@@ -69,10 +71,10 @@ void Bird::update(double delta_time)
   vector2 movement = physics_component->updatePosition(delta_time, collision);
   float rotation = physics_component->updateRotation(delta_time, collision);
 
-  float new_x =
-    spriteComponent()->getSprite()->xPos() + movement.x * float(delta_time);
-  float new_y =
-    spriteComponent()->getSprite()->yPos() + movement.y * float(delta_time);
+  float new_x = spriteComponent()->getSprite()->xPos() +
+                movement.x * float(delta_time) * speed;
+  float new_y = spriteComponent()->getSprite()->yPos() +
+                movement.y * float(delta_time) * speed;
   spriteComponent()->getSprite()->xPos(new_x);
   spriteComponent()->getSprite()->yPos(new_y);
   shape.x = new_x;

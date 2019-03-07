@@ -71,11 +71,13 @@ bool Angry::init()
     return false;
   }
 
+  // TODO: Setup and load a catapult sprite
+
   for (int i = 0; i < NUM_OF_BIRDS; i++)
   {
     if (birds[i].addSpriteComponent(renderer.get(), "data/Textures/parrot.png"))
     {
-      birds[i].setUpBird(float(i * 60) + 20, 850, 50, vector2(0, 0), 0, 50);
+      birds[i].setUpBird(float(i * 60) + 20, 850, 50, vector2(0, 0), 0, 50, 3);
     }
     else
     {
@@ -177,16 +179,37 @@ void Angry::clickHandler(const ASGE::SharedEventData data)
   double y_pos = click->ypos;
 
   // If have clicked on bird
-  if (click->action == ASGE::MOUSE::BUTTON_PRESSED &&
+  if (current_bird >= 0 && click->action == ASGE::MOUSE::BUTTON_PRESSED &&
       birds[current_bird].spriteComponent()->getBoundingBox().isInside(
         float(x_pos), float(y_pos)))
   {
     clicked_on_bird = true;
   }
-  else if (click->action == ASGE::MOUSE::BUTTON_RELEASED && clicked_on_bird)
+  else if (current_bird >= 0 && click->action == ASGE::MOUSE::BUTTON_RELEASED &&
+           clicked_on_bird)
   {
     clicked_on_bird = false;
     // Release bird
+    birds[current_bird].released(true);
+    float x_diff =
+      birds[current_bird].spriteComponent()->getSprite()->xPos() - 250;
+    float y_diff =
+      birds[current_bird].spriteComponent()->getSprite()->yPos() - 700;
+    birds[current_bird].physicsComponent()->linearVelocity(
+      vector2(-x_diff * 1.5f, -y_diff * 3));
+    birds[current_bird].physicsComponent()->linearVelocity().normalise();
+
+    // Set up next bird
+    current_bird--;
+    if (current_bird < 0)
+    {
+      game_over = true;
+    }
+    else
+    {
+      birds[current_bird].spriteComponent()->getSprite()->xPos(250);
+      birds[current_bird].spriteComponent()->getSprite()->yPos(700);
+    }
   }
 
   ASGE::DebugPrinter() << x_pos << "," << y_pos << std::endl;
@@ -218,21 +241,29 @@ void Angry::update(const ASGE::GameTime& game_time)
         birds[current_bird].spriteComponent()->getSprite()->height() / 2);
 
       // Limit bird movement
-      if (mouse_x < 50 + birds[current_bird].spriteComponent()->getSprite()->width() / 2)
+      // TODO:: Change to be distance(ensuring to the left of the catapult)
+      if (mouse_x <
+          50 + birds[current_bird].spriteComponent()->getSprite()->width() / 2)
       {
         birds[current_bird].spriteComponent()->getSprite()->xPos(50);
       }
       else if (mouse_x >
                250 +
-                 birds[current_bird].spriteComponent()->getSprite()->width() / 2)
+                 birds[current_bird].spriteComponent()->getSprite()->width() /
+                   2)
       {
         birds[current_bird].spriteComponent()->getSprite()->xPos(250);
       }
       if (mouse_y < 650)
       {
-        birds[current_bird].spriteComponent()->getSprite()->yPos(650 - birds[current_bird].spriteComponent()->getSprite()->height() / 2);
+        birds[current_bird].spriteComponent()->getSprite()->yPos(
+          650 -
+          birds[current_bird].spriteComponent()->getSprite()->height() / 2);
       }
-      else if (mouse_y > 800 + birds[current_bird].spriteComponent()->getSprite()->height() / 2)
+      else if (mouse_y >
+               800 +
+                 birds[current_bird].spriteComponent()->getSprite()->height() /
+                   2)
       {
         birds[current_bird].spriteComponent()->getSprite()->yPos(800);
       }

@@ -20,7 +20,8 @@ class Bird : public GameObject
                  float r_,
                  vector2 velocity,
                  float angular_velocity,
-                 float mass);
+                 float mass,
+                 float speed_);
 
   bool released();
   void released(bool r);

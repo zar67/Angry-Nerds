@@ -33,4 +33,6 @@ class GameObject
   void freePhysics();
   SpriteComponent* sprite_component = nullptr;
   PhysicsComponent* physics_component = nullptr;
+
+  float speed = 0;
 };
