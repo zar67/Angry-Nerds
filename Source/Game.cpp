@@ -71,15 +71,25 @@ bool Angry::init()
     return false;
   }
 
-  if (bird.addSpriteComponent(renderer.get(), "data/Textures/parrot.png"))
+  // TODO: Setup and load a catapult sprite
+
+  for (int i = 0; i < NUM_OF_BIRDS; i++)
   {
-    bird.setUpBird(10, 60, 40, vector2(0, 0), 0, 50);
+    if (birds[i].addSpriteComponent(renderer.get(), "data/Textures/parrot.png"))
+    {
+      birds[i].setUpBird(
+        float(i * 60) + 20, 850, 50, vector2(0, 0), 0, 50, 3.5f);
+    }
+    else
+    {
+      std::cout << "Bird Sprite " << i << " not loaded" << std::endl;
+      return false;
+    }
   }
-  else
-  {
-    std::cout << "Bird Sprite not loaded" << std::endl;
-    return false;
-  }
+
+  birds[current_bird].spriteComponent()->getSprite()->xPos(250);
+  birds[current_bird].spriteComponent()->getSprite()->yPos(700);
+
   return true;
 }
 
@@ -89,12 +99,7 @@ bool Angry::loadBackgrounds()
   filename += std::to_string(std::rand() % 3 + 1);
   filename += ".png";
 
-  if (!background_layer.addSpriteComponent(renderer.get(), filename))
-  {
-    return false;
-  }
-
-  return true;
+  return background_layer.addSpriteComponent(renderer.get(), filename);
 }
 
 /**
@@ -169,6 +174,40 @@ void Angry::clickHandler(const ASGE::SharedEventData data)
   double x_pos = click->xpos;
   double y_pos = click->ypos;
 
+  // If have clicked on bird
+  if (current_bird >= 0 && click->action == ASGE::MOUSE::BUTTON_PRESSED &&
+      birds[current_bird].spriteComponent()->getBoundingBox().isInside(
+        float(x_pos), float(y_pos)))
+  {
+    clicked_on_bird = true;
+  }
+  else if (current_bird >= 0 && click->action == ASGE::MOUSE::BUTTON_RELEASED &&
+           clicked_on_bird)
+  {
+    clicked_on_bird = false;
+    // Release bird
+    birds[current_bird].released(true);
+    float x_diff =
+      birds[current_bird].spriteComponent()->getSprite()->xPos() - 250;
+    float y_diff =
+      birds[current_bird].spriteComponent()->getSprite()->yPos() - 700;
+    birds[current_bird].physicsComponent()->linearVelocity(
+      vector2(-x_diff * 1.5f, -y_diff * 3));
+    birds[current_bird].physicsComponent()->linearVelocity().normalise();
+
+    // Set up next bird
+    current_bird--;
+    if (current_bird < 0)
+    {
+      game_over = true;
+    }
+    else
+    {
+      birds[current_bird].spriteComponent()->getSprite()->xPos(250);
+      birds[current_bird].spriteComponent()->getSprite()->yPos(700);
+    }
+  }
+
   ASGE::DebugPrinter() << x_pos << "," << y_pos << std::endl;
 }
 
@@ -186,7 +225,71 @@ void Angry::update(const ASGE::GameTime& game_time)
 
   if (!in_menu)
   {
-    bird.update(game_time.delta.count() / 1000.0f);
+    if (clicked_on_bird)
+    {
+      // Update bird position
+      inputs->getCursorPos(mouse_x, mouse_y);
+      birds[current_bird].spriteComponent()->getSprite()->xPos(
+        float(mouse_x) -
+        birds[current_bird].spriteComponent()->getSprite()->width() / 2);
+      birds[current_bird].spriteComponent()->getSprite()->yPos(
+        float(mouse_y) -
+        birds[current_bird].spriteComponent()->getSprite()->height() / 2);
+
+      // Limit bird movement to semi-circle
+      if (mouse_x >
+          250 + birds[current_bird].spriteComponent()->getSprite()->width() / 2)
+      {
+        birds[current_bird].spriteComponent()->getSprite()->xPos(250);
+      }
+      float distance = birds[current_bird].position().distance(250, 700);
+      if (distance > 125)
+      {
+        float ratio = (distance - 125) / distance;
+        birds[current_bird].spriteComponent()->getSprite()->xPos(
+          birds[current_bird].spriteComponent()->getSprite()->xPos() *
+            (1 - ratio) +
+          ratio * 250);
+        birds[current_bird].spriteComponent()->getSprite()->yPos(
+          birds[current_bird].spriteComponent()->getSprite()->yPos() *
+            (1 - ratio) +
+          ratio * 700);
+      }
+
+      /*if (mouse_x <
+          50 + birds[current_bird].spriteComponent()->getSprite()->width() / 2)
+      {
+        birds[current_bird].spriteComponent()->getSprite()->xPos(50);
+      }
+      else if (mouse_x >
+               250 +
+                 birds[current_bird].spriteComponent()->getSprite()->width() /
+                   2)
+      {
+        birds[current_bird].spriteComponent()->getSprite()->xPos(250);
+      }
+      if (mouse_y < 650)
+      {
+        birds[current_bird].spriteComponent()->getSprite()->yPos(
+          650 -
+          birds[current_bird].spriteComponent()->getSprite()->height() / 2);
+      }
+      else if (mouse_y >
+               800 +
+                 birds[current_bird].spriteComponent()->getSprite()->height() /
+                   2)
+      {
+        birds[current_bird].spriteComponent()->getSprite()->yPos(800);
+      }*/
+    }
+
+    for (int i = 0; i < NUM_OF_BIRDS; i++)
+    {
+      if (birds[i].released())
+      {
+        birds[i].update(game_time.delta.count() / 1000.0f);
+      }
+    }
   }
 }
 
@@ -208,6 +311,10 @@ void Angry::render(const ASGE::GameTime& game_time)
   else
   {
     renderer->renderSprite(*background_layer.spriteComponent()->getSprite());
-    renderer->renderSprite(*bird.spriteComponent()->getSprite());
+
+    for (int i = 0; i < NUM_OF_BIRDS; i++)
+    {
+      renderer->renderSprite(*birds[i].spriteComponent()->getSprite());
+    }
   }
 }

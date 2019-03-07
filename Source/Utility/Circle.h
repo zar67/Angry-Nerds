@@ -5,8 +5,8 @@
 #ifndef ANGRYNERDS_CIRCLE_H
 #define ANGRYNERDS_CIRCLE_H
 
-#include "Rectangle.h"
-#include "Vector2.h"
+#include "Utility/Rectangle.h"
+#include "Utility/Vector2.h"
 
 struct Rectangle;
 

@@ -25,6 +25,8 @@ class GameObject
   addPhysicsComponent(vector2 v, float a, float m, float width, float height);
   PhysicsComponent* physicsComponent();
 
+  vector2 position();
+
   virtual void update(double delta_time){};
 
  protected:
@@ -33,4 +35,6 @@ class GameObject
   void freePhysics();
   SpriteComponent* sprite_component = nullptr;
   PhysicsComponent* physics_component = nullptr;
+
+  float speed = 0;
 };

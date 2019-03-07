@@ -106,3 +106,10 @@ float vector2::crossProduct(vector2 vector)
 {
   return (x * vector.y) - (y * vector.x);
 }
+
+float vector2::distance(float x_, float y_)
+{
+  float x_diff = x - x_;
+  float y_diff = y - y_;
+  return sqrt((x_diff * x_diff) + (y_diff * y_diff));
+}

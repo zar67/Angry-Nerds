@@ -95,3 +95,9 @@ PhysicsComponent* GameObject::physicsComponent()
 {
   return physics_component;
 }
+
+vector2 GameObject::position()
+{
+  return vector2(sprite_component->getSprite()->xPos(),
+                 sprite_component->getSprite()->yPos());
+}
