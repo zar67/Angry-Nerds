@@ -22,10 +22,14 @@ class Bird : public GameObject
                  float angular_velocity,
                  float mass);
 
+  bool released();
+  void released(bool r);
+
  private:
   bool collisionDetection() override;
   Circle shape;
   float friction = 0.25f;
+  bool free = false;
 };
 
 #endif // ANGRYNERDS_BIRD_H

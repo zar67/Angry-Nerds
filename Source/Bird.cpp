@@ -80,3 +80,13 @@ void Bird::update(double delta_time)
   spriteComponent()->getSprite()->rotationInRadians((rotation * (3.14f / 180)) *
                                                     float(delta_time));
 }
+
+bool Bird::released()
+{
+  return free;
+}
+
+void Bird::released(bool r)
+{
+  free = r;
+}

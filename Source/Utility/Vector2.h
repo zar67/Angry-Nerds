@@ -9,6 +9,7 @@ struct vector2
   void setAs(float x_, float y_);
   void increaseBy(float x_, float y_);
   void multiplyBy(float x_, float y_);
+
   vector2 operator*(float scalar);
   vector2& operator=(const vector2& rhs);
 
