@@ -17,7 +17,7 @@ vector2 Rectangle::AABBCollision(Rectangle rectangle)
 
   if (intersect_x > 0 || intersect_y > 0)
   {
-      return vector2(0,0);
+    return vector2(0, 0);
   }
 
   // There is a collision
@@ -73,8 +73,7 @@ vector2 Rectangle::CircleCollision(Circle circle)
 */
 bool Rectangle::isInside(float x_, float y_) const
 {
-  if (x_ >= x && x_ <= x + width && y_ >= y &&
-      y_ <= y + height)
+  if (x_ >= x && x_ <= x + width && y_ >= y && y_ <= y + height)
   {
     return true;
   }
