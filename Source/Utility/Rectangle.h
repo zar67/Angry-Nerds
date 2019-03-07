@@ -2,8 +2,8 @@
 #ifndef ANGRYNERDS_RECTANGLE_H
 #define ANGRYNERDS_RECTANGLE_H
 
-#include "Circle.h"
-#include "Vector2.h"
+#include "Utility/Circle.h"
+#include "Utility/Vector2.h"
 
 struct Circle;
 

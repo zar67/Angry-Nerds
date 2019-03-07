@@ -1,4 +1,5 @@
 #pragma once
+
 struct vector2
 {
   // construction
@@ -15,6 +16,7 @@ struct vector2
 
   void normalise();
   float crossProduct(vector2 vector);
+  float distance(float x_, float y_);
 
   // data
   float x = 0;

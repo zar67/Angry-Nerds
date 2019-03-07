@@ -77,7 +77,8 @@ bool Angry::init()
   {
     if (birds[i].addSpriteComponent(renderer.get(), "data/Textures/parrot.png"))
     {
-      birds[i].setUpBird(float(i * 60) + 20, 850, 50, vector2(0, 0), 0, 50, 3);
+      birds[i].setUpBird(
+        float(i * 60) + 20, 850, 50, vector2(0, 0), 0, 50, 3.5f);
     }
     else
     {
@@ -98,12 +99,7 @@ bool Angry::loadBackgrounds()
   filename += std::to_string(std::rand() % 3 + 1);
   filename += ".png";
 
-  if (!background_layer.addSpriteComponent(renderer.get(), filename))
-  {
-    return false;
-  }
-
-  return true;
+  return background_layer.addSpriteComponent(renderer.get(), filename);
 }
 
 /**
@@ -240,9 +236,27 @@ void Angry::update(const ASGE::GameTime& game_time)
         float(mouse_y) -
         birds[current_bird].spriteComponent()->getSprite()->height() / 2);
 
-      // Limit bird movement
-      // TODO:: Change to be distance(ensuring to the left of the catapult)
-      if (mouse_x <
+      // Limit bird movement to semi-circle
+      if (mouse_x >
+          250 + birds[current_bird].spriteComponent()->getSprite()->width() / 2)
+      {
+        birds[current_bird].spriteComponent()->getSprite()->xPos(250);
+      }
+      float distance = birds[current_bird].position().distance(250, 700);
+      if (distance > 125)
+      {
+        float ratio = (distance - 125) / distance;
+        birds[current_bird].spriteComponent()->getSprite()->xPos(
+          birds[current_bird].spriteComponent()->getSprite()->xPos() *
+            (1 - ratio) +
+          ratio * 250);
+        birds[current_bird].spriteComponent()->getSprite()->yPos(
+          birds[current_bird].spriteComponent()->getSprite()->yPos() *
+            (1 - ratio) +
+          ratio * 700);
+      }
+
+      /*if (mouse_x <
           50 + birds[current_bird].spriteComponent()->getSprite()->width() / 2)
       {
         birds[current_bird].spriteComponent()->getSprite()->xPos(50);
@@ -266,12 +280,12 @@ void Angry::update(const ASGE::GameTime& game_time)
                    2)
       {
         birds[current_bird].spriteComponent()->getSprite()->yPos(800);
-      }
+      }*/
     }
 
     for (int i = 0; i < NUM_OF_BIRDS; i++)
     {
-      if (birds[i].released() == true)
+      if (birds[i].released())
       {
         birds[i].update(game_time.delta.count() / 1000.0f);
       }
