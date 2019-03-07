@@ -15,30 +15,31 @@ vector2 Rectangle::AABBCollision(Rectangle rectangle)
   float intersect_x = abs(delta_x) - (width / 2 + rectangle.width / 2);
   float intersect_y = abs(delta_y) - (height / 2 + rectangle.height / 2);
 
-  if (intersect_x < 0 && intersect_y < 0)
+  if (intersect_x > 0 || intersect_y > 0)
   {
-    if (abs(intersect_x) < abs(intersect_y))
-    {
-      // Intersected on left or right side
-      if (delta_x > 0)
-      {
-        // Intersected on right side
-        return vector2(x + width, y + (height / 2));
-      }
-      // Intersected on left side
-      return vector2(x, y + (height / 2));
-    }
-    // Intersected on top or bottom side
-    else if (delta_y > 0)
-    {
-      // intersected on top side
-      return vector2(x + (width / 2), y);
-    }
-    // intersected on bottom side
-    return vector2(x + (width / 2), y + height);
+      return vector2(0,0);
   }
 
-  return vector2(0, 0);
+  // There is a collision
+  if (abs(intersect_x) < abs(intersect_y))
+  {
+    // Intersected on left or right side
+    if (delta_x > 0)
+    {
+      // Intersected on right side
+      return vector2(x + width, y + (height / 2));
+    }
+    // Intersected on left side
+    return vector2(x, y + (height / 2));
+  }
+  // Intersected on top or bottom side
+  if (delta_y > 0)
+  {
+    // intersected on top side
+    return vector2(x + (width / 2), y);
+  }
+  // intersected on bottom side
+  return vector2(x + (width / 2), y + height);
 }
 
 /**
@@ -72,8 +73,8 @@ vector2 Rectangle::CircleCollision(Circle circle)
 */
 bool Rectangle::isInside(float x_, float y_) const
 {
-  if (x_ >= this->x && x_ <= this->x + this->width && y_ >= this->y &&
-      y_ <= this->y + this->height)
+  if (x_ >= x && x_ <= x + width && y_ >= y &&
+      y_ <= y + height)
   {
     return true;
   }
