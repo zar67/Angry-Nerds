@@ -3,7 +3,6 @@
 //
 
 #include "Bird.h"
-#include <iostream>
 
 /**
  *   @brief   Sets up the bird object
@@ -57,7 +56,6 @@ bool Bird::collisionDetection(Block blocks[], int block_num)
     if (point.x != 0 || point.y != 0)
     {
       int side = getCollisionSide(point, blocks[i].getShape());
-      std::cout << side << std::endl;
       if (side != 0)
       {
         // There is a valid collision
