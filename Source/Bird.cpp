@@ -30,12 +30,16 @@ void Bird::setUpBird(float x_, float y_)
  *   @details Detects collision against the ground, pigs and blocks
  *   @return  Bool stating whether a collision has happened
  */
-void Bird::collisionDetection(Block blocks[], int block_num)
+bool Bird::collisionDetection(Block blocks[], int block_num)
 {
+  bool collision = false;
+
   // Ground Collision
   if (spriteComponent()->getSprite()->yPos() > 850 &&
-      physics_component->linearVelocity().y > 0)
+      physics_component->linearVelocity().y >= 0)
   {
+    collision = true;
+    spriteComponent()->getSprite()->yPos(850);
     physics_component->linearVelocity(
       vector2(physics_component->linearVelocity().x * friction,
               -physics_component->linearVelocity().y * friction));
@@ -57,9 +61,11 @@ void Bird::collisionDetection(Block blocks[], int block_num)
       if (side != 0)
       {
         // There is a valid collision
+        collision = true;
+
         blocks[i].physicsComponent()->linearVelocity(
-                vector2(physicsComponent()->linearVelocity().x * 0.6f,
-                        physicsComponent()->linearVelocity().y * 0.6f));
+          vector2(physicsComponent()->linearVelocity().x * 2,
+                  physicsComponent()->linearVelocity().y * 2));
         // Update velocity based on side hit
         if (side == 1 || side == 2)
         {
@@ -76,11 +82,12 @@ void Bird::collisionDetection(Block blocks[], int block_num)
       }
     }
   }
+
+  return collision;
 }
 
 int Bird::getCollisionSide(vector2 point, Rectangle col_shape)
 {
-  std::cout << int(point.x) << ", " << int(point.y) << std::endl;
   if (point.x == col_shape.x && physicsComponent()->linearVelocity().x > 0)
   {
     return 1;
@@ -110,9 +117,9 @@ int Bird::getCollisionSide(vector2 point, Rectangle col_shape)
  */
 void Bird::update(double delta_time, Block blocks[], int block_num)
 {
-  collisionDetection(blocks, block_num);
+  bool collision = collisionDetection(blocks, block_num);
 
-  vector2 movement = physics_component->updatePosition(delta_time);
+  vector2 movement = physics_component->updatePosition(delta_time, collision);
   float rotation = physics_component->updateRotation(delta_time);
 
   float new_x = spriteComponent()->getSprite()->xPos() +

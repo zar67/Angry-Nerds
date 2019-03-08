@@ -20,14 +20,18 @@ void Block::setUpBlock(float x_, float y_, float w_, float h_)
 
 bool Block::collisionDetection(Block blocks[], int block_num)
 {
+  bool collision = false;
+
   // Ground Collision
   if (spriteComponent()->getSprite()->yPos() > 900 - shape.height &&
-      physics_component->linearVelocity().y > 0)
+      physics_component->linearVelocity().y >= 0)
   {
+    collision = true;
+    spriteComponent()->getSprite()->yPos(
+      900 - spriteComponent()->getSprite()->height());
     physics_component->linearVelocity(
       vector2(physics_component->linearVelocity().x * friction,
               -physics_component->linearVelocity().y * friction));
-    return true;
   }
 
   // Bird Collision
@@ -42,14 +46,14 @@ bool Block::collisionDetection(Block blocks[], int block_num)
   // For each block do AABB/AABB collision
   // If hit block do force update
 
-  return false;
+  return collision;
 }
 
 void Block::update(double delta_time, Block blocks[], int block_num)
 {
-  collisionDetection(blocks, block_num);
+  bool collision = collisionDetection(blocks, block_num);
 
-  vector2 movement = physics_component->updatePosition(delta_time);
+  vector2 movement = physics_component->updatePosition(delta_time, collision);
   float rotation = physics_component->updateRotation(delta_time);
 
   float new_x = spriteComponent()->getSprite()->xPos() +

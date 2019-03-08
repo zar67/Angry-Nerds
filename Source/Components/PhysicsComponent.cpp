@@ -29,9 +29,12 @@ void PhysicsComponent::initPhysics(
  *   @return  The movement vector that should be applied to the object's
  * position
  */
-vector2 PhysicsComponent::updatePosition(double delta_time)
+vector2 PhysicsComponent::updatePosition(double delta_time, bool collision)
 {
-  force.setAs(0, mass * gravity * 10);
+  if (!collision)
+  {
+    force.setAs(0, mass * gravity * 10);
+  }
 
   vector2 linear_acceleration = vector2(force.x / mass, force.y / mass);
   linear_velocity.increaseBy(float(linear_acceleration.x * delta_time),
