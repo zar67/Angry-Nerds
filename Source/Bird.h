@@ -15,16 +15,10 @@ class Bird : public GameObject
   ~Bird() override = default;
 
   void update(double delta_time) override;
-  void setUpBird(float x_,
-                 float y_,
-                 float r_,
-                 vector2 velocity,
-                 float angular_velocity,
-                 float mass,
-                 float speed_);
+  void setUpBird(float x_, float y_);
 
   bool released();
-  void released(bool r);
+  void released(bool r_);
 
  private:
   bool collisionDetection() override;

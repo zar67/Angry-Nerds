@@ -1,38 +1,27 @@
 //
-// Created by Zoe on 04/03/2019.
+// Created by Zoe on 08/03/2019.
 //
 
-#include "Bird.h"
+#include "Block.h"
 
-/**
- *   @brief   Sets up the bird object
- *   @details Sprite component needs to be added before this function is called.
- * This function sets up the physics components and the needed attributes of the
- * bird class.
- *   @return  void
- */
-void Bird::setUpBird(float x_, float y_)
+void Block::setUpBlock(float x_, float y_, float w_, float h_)
 {
-  addPhysicsComponent(vector2(0, 0), 0, 50, 50, 50);
+  addPhysicsComponent(vector2(0, 0), 0, 60, w_, h_);
   spriteComponent()->getSprite()->xPos(x_);
   spriteComponent()->getSprite()->yPos(y_);
-  spriteComponent()->getSprite()->width(50);
-  spriteComponent()->getSprite()->height(50);
+  spriteComponent()->getSprite()->width(w_);
+  spriteComponent()->getSprite()->height(h_);
   shape.x = x_;
   shape.y = y_;
-  shape.radius = 50;
-  speed = 3.5f;
+  shape.width = w_;
+  shape.height = h_;
+  speed = 1.5f;
 }
 
-/**
- *   @brief   Collision Detection
- *   @details Detects collision against the ground, pigs and blocks
- *   @return  Bool stating whether a collision has happened
- */
-bool Bird::collisionDetection()
+bool Block::collisionDetection()
 {
   // Ground Collision
-  if (spriteComponent()->getSprite()->yPos() > 900 - shape.radius * 2 &&
+  if (spriteComponent()->getSprite()->yPos() > 900 - shape.height &&
       physics_component->linearVelocity().y > 0)
   {
     physics_component->linearVelocity(
@@ -41,24 +30,22 @@ bool Bird::collisionDetection()
     return true;
   }
 
+  // Bird Collision
+  // For each bird do AABB/circle collision
+  // If hit bird do force updates
+
   // Pig Collision
-  // For each pig do circle/circle collision
+  // For each pig do AABB/circle collision
   // If hit pig do force updates
 
   // Block collision
-  // For each block do circle/AABB collision
-  // if hit block do force update
+  // For each block do AABB/AABB collision
+  // If hit block do force update
 
   return false;
 }
 
-/**
- *   @brief   Update
- *   @details Calls collision detection, does physics and updates object
- * position
- *   @return  void
- */
-void Bird::update(double delta_time)
+void Block::update(double delta_time)
 {
   bool collision = collisionDetection();
 
@@ -69,21 +56,11 @@ void Bird::update(double delta_time)
                 movement.x * float(delta_time) * speed;
   float new_y = spriteComponent()->getSprite()->yPos() +
                 movement.y * float(delta_time) * speed;
+
   spriteComponent()->getSprite()->xPos(new_x);
   spriteComponent()->getSprite()->yPos(new_y);
-
   shape.x = new_x;
   shape.y = new_y;
   spriteComponent()->getSprite()->rotationInRadians((rotation * (3.14f / 180)) *
                                                     float(delta_time));
-}
-
-bool Bird::released()
-{
-  return free;
-}
-
-void Bird::released(bool r_)
-{
-  free = r_;
 }
