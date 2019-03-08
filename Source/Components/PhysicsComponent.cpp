@@ -78,8 +78,8 @@ void PhysicsComponent::addForce(float fx, float fy, vector2 point)
 {
   force.x += fx;
   force.y += fy;
-  torque +=
-    force.crossProduct(vector2(point.x - (width / 2), point.y - (width / 2)));
+  // torque +=
+  //  force.crossProduct(vector2(point.x - (width / 2), point.y - (width / 2)));
 }
 
 /**
@@ -89,4 +89,14 @@ void PhysicsComponent::addForce(float fx, float fy, vector2 point)
 void PhysicsComponent::addTorque(float t_)
 {
   torque += t_;
+}
+
+vector2 PhysicsComponent::getForce()
+{
+  return force;
+}
+
+float PhysicsComponent::getTorque()
+{
+  return torque;
 }

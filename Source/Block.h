@@ -5,8 +5,11 @@
 #ifndef ANGRYNERDS_BLOCK_H
 #define ANGRYNERDS_BLOCK_H
 
+#include "Bird.h"
 #include "Components/GameObject.h"
 #include "Utility/Rectangle.h"
+
+class Bird;
 
 class Block : public GameObject
 {
@@ -14,11 +17,13 @@ class Block : public GameObject
   Block() = default;
   ~Block() override = default;
 
-  void update(double delta_time) override;
+  void update(double delta_time, Block blocks[], int block_num);
   void setUpBlock(float x_, float y_, float w_, float h_);
 
+  Rectangle getShape();
+
  private:
-  bool collisionDetection() override;
+  bool collisionDetection(Block blocks[], int block_num);
   Rectangle shape;
   float friction = 0.1f;
 };

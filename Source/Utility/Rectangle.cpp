@@ -51,13 +51,12 @@ vector2 Rectangle::AABBCollision(Rectangle rectangle)
  */
 vector2 Rectangle::CircleCollision(Circle circle)
 {
-  float closest_x = (circle.x + circle.radius) -
-                    fmaxf(x, fminf((circle.x + circle.radius), (x + width)));
-  float closest_y = (circle.y + circle.radius) -
-                    fmaxf(y, fminf((circle.x) + circle.radius, (y + width)));
+  float closest_x = fmaxf(x, fminf((circle.x + circle.radius), (x + width)));
+  float closest_y = fmaxf(y, fminf((circle.x) + circle.radius, (y + width)));
+  float x_diff = (circle.x + circle.radius) - closest_x;
+  float y_diff = (circle.y + circle.radius) - closest_y;
 
-  if ((circle.radius * circle.radius) >
-      ((closest_x * closest_x) + (closest_y * closest_y)))
+  if ((circle.radius * circle.radius) > ((x_diff * x_diff) + (y_diff * y_diff)))
   {
     return vector2(closest_x, closest_y);
   }

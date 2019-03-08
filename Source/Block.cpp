@@ -18,7 +18,7 @@ void Block::setUpBlock(float x_, float y_, float w_, float h_)
   speed = 1.5f;
 }
 
-bool Block::collisionDetection()
+bool Block::collisionDetection(Block blocks[], int block_num)
 {
   // Ground Collision
   if (spriteComponent()->getSprite()->yPos() > 900 - shape.height &&
@@ -45,9 +45,9 @@ bool Block::collisionDetection()
   return false;
 }
 
-void Block::update(double delta_time)
+void Block::update(double delta_time, Block blocks[], int block_num)
 {
-  bool collision = collisionDetection();
+  bool collision = collisionDetection(blocks, block_num);
 
   vector2 movement = physics_component->updatePosition(delta_time, collision);
   float rotation = physics_component->updateRotation(delta_time, collision);
@@ -63,4 +63,9 @@ void Block::update(double delta_time)
   shape.y = new_y;
   spriteComponent()->getSprite()->rotationInRadians((rotation * (3.14f / 180)) *
                                                     float(delta_time));
+}
+
+Rectangle Block::getShape()
+{
+  return shape;
 }
