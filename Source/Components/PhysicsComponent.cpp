@@ -29,13 +29,10 @@ void PhysicsComponent::initPhysics(
  *   @return  The movement vector that should be applied to the object's
  * position
  */
-vector2 PhysicsComponent::updatePosition(double delta_time, bool collision)
+vector2 PhysicsComponent::updatePosition(double delta_time)
 {
-  // Update force
-  if (!collision)
-  {
-    force.setAs(0, mass * gravity * 10);
-  }
+  force.setAs(0, mass * gravity * 10);
+
   vector2 linear_acceleration = vector2(force.x / mass, force.y / mass);
   linear_velocity.increaseBy(float(linear_acceleration.x * delta_time),
                              float(linear_acceleration.y * delta_time));
@@ -53,14 +50,11 @@ vector2 PhysicsComponent::updatePosition(double delta_time, bool collision)
  *   @return  The amount of rotation that should be applied to the object's
  * rotation
  */
-float PhysicsComponent::updateRotation(double delta_time, bool collision)
+float PhysicsComponent::updateRotation(double delta_time)
 {
-  // Update torque
-  if (!collision)
-  {
-    vector2 arm_vector = vector2(width / 2, height / 2);
-    torque = force.crossProduct(arm_vector);
-  }
+  vector2 arm_vector = vector2(width / 2, height / 2);
+  torque = force.crossProduct(arm_vector);
+
   float angular_acceleration = torque / inertia;
   angular_velocity += float(angular_acceleration * delta_time);
 

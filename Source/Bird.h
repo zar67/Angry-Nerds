@@ -26,7 +26,8 @@ class Bird : public GameObject
   void released(bool r_);
 
  private:
-  bool collisionDetection(Block blocks[], int block_num);
+  void collisionDetection(Block blocks[], int block_num);
+  int getCollisionSide(vector2 point, Rectangle col_shape);
   Circle shape;
   float friction = 0.25f;
   bool free = false;

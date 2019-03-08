@@ -47,10 +47,10 @@ bool Block::collisionDetection(Block blocks[], int block_num)
 
 void Block::update(double delta_time, Block blocks[], int block_num)
 {
-  bool collision = collisionDetection(blocks, block_num);
+  collisionDetection(blocks, block_num);
 
-  vector2 movement = physics_component->updatePosition(delta_time, collision);
-  float rotation = physics_component->updateRotation(delta_time, collision);
+  vector2 movement = physics_component->updatePosition(delta_time);
+  float rotation = physics_component->updateRotation(delta_time);
 
   float new_x = spriteComponent()->getSprite()->xPos() +
                 movement.x * float(delta_time) * speed;

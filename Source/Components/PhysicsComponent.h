@@ -14,8 +14,8 @@ class PhysicsComponent
   ~PhysicsComponent() = default;
   void
   initPhysics(vector2 velocity, float a_velocity, float m_, float w_, float h_);
-  vector2 updatePosition(double delta_time, bool collision);
-  float updateRotation(double delta_time, bool collision);
+  vector2 updatePosition(double delta_time);
+  float updateRotation(double delta_time);
   void addForce(float fx, float fy, vector2 point);
   void addTorque(float t_);
 

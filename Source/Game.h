@@ -7,7 +7,7 @@
 #include "Components/GameObject.h"
 #include "Utility/Rectangle.h"
 
-const int NUM_OF_BIRDS = 3;
+const int NUM_OF_BIRDS = 6;
 const int NUM_OF_BLOCKS = 5;
 
 /**
