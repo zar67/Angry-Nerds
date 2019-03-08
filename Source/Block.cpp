@@ -34,19 +34,73 @@ bool Block::collisionDetection(Block blocks[], int block_num)
               -physics_component->linearVelocity().y * friction));
   }
 
-  // Bird Collision
-  // For each bird do AABB/circle collision
-  // If hit bird do force updates
-
   // Pig Collision
   // For each pig do AABB/circle collision
   // If hit pig do force updates
 
   // Block collision
-  // For each block do AABB/AABB collision
-  // If hit block do force update
+  for (int i = 0; i < block_num; i++)
+  {
+    if (blocks[i].spriteComponent()->getSprite()->xPos() !=
+          spriteComponent()->getSprite()->xPos() &&
+        blocks[i].spriteComponent()->getSprite()->yPos() !=
+          spriteComponent()->getSprite()->yPos())
+    {
+        vector2 point = blocks[i].getShape().AABBCollision(shape);
+
+        if (point.x != 0 || point.y != 0)
+        {
+            int side = getCollisionSide(point, blocks[i].getShape());
+            if (side != 0)
+            {
+                // There is a valid collision
+                collision = true;
+
+                blocks[i].physicsComponent()->linearVelocity(
+                        vector2(physicsComponent()->linearVelocity().x * 2,
+                                physicsComponent()->linearVelocity().y * 2));
+                // Update velocity based on side hit
+                if (side == 1 || side == 2)
+                {
+                    physicsComponent()->linearVelocity(
+                            vector2(-physicsComponent()->linearVelocity().x * 0.4f,
+                                    physicsComponent()->linearVelocity().y * 0.4f));
+                }
+                else if (side == 3 || side == 4)
+                {
+                    physicsComponent()->linearVelocity(
+                            vector2(physicsComponent()->linearVelocity().x * 0.4f,
+                                    -physicsComponent()->linearVelocity().y * 0.4f));
+                }
+            }
+        }
+    }
+  }
 
   return collision;
+}
+
+int Block::getCollisionSide(vector2 point, Rectangle col_shape)
+{
+  if (point.x == col_shape.x && physicsComponent()->linearVelocity().x > 0)
+  {
+    return 1;
+  }
+  else if (point.x == col_shape.x + col_shape.width &&
+           physicsComponent()->linearVelocity().x < 0)
+  {
+    return 2;
+  }
+  else if (point.y == col_shape.y && physicsComponent()->linearVelocity().y > 0)
+  {
+    return 3;
+  }
+  else if (point.y == col_shape.y + col_shape.height &&
+           physicsComponent()->linearVelocity().y < 0)
+  {
+    return 4;
+  }
+  return 0;
 }
 
 void Block::update(double delta_time, Block blocks[], int block_num)

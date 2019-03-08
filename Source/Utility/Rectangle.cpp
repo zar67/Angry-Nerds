@@ -15,7 +15,7 @@ vector2 Rectangle::AABBCollision(Rectangle rectangle)
   float intersect_x = abs(delta_x) - (width / 2 + rectangle.width / 2);
   float intersect_y = abs(delta_y) - (height / 2 + rectangle.height / 2);
 
-  if (intersect_x > 0 || intersect_y > 0)
+  if (intersect_x <= 0 || intersect_y <= 0)
   {
     return vector2(0, 0);
   }
