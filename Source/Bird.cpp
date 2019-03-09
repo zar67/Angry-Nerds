@@ -86,21 +86,22 @@ bool Bird::collisionDetection(Block blocks[], int block_num)
 
 int Bird::getCollisionSide(vector2 point, Rectangle col_shape)
 {
-  if (point.x == col_shape.x && physicsComponent()->linearVelocity().x > 0)
+  if (point.x == col_shape.x && physicsComponent()->linearVelocity().x >= 0)
   {
     return 1;
   }
   else if (point.x == col_shape.x + col_shape.width &&
-           physicsComponent()->linearVelocity().x < 0)
+           physicsComponent()->linearVelocity().x <= 0)
   {
     return 2;
   }
-  else if (point.y == col_shape.y && physicsComponent()->linearVelocity().y > 0)
+  else if (point.y == col_shape.y &&
+           physicsComponent()->linearVelocity().y >= 0)
   {
     return 3;
   }
   else if (point.y == col_shape.y + col_shape.height &&
-           physicsComponent()->linearVelocity().y < 0)
+           physicsComponent()->linearVelocity().y <= 0)
   {
     return 4;
   }
@@ -118,7 +119,7 @@ void Bird::update(double delta_time, Block blocks[], int block_num)
   bool collision = collisionDetection(blocks, block_num);
 
   vector2 movement = physics_component->updatePosition(delta_time, collision);
-  float rotation = physics_component->updateRotation(delta_time);
+  float rotation = physics_component->updateRotation(delta_time, collision);
 
   float new_x = spriteComponent()->getSprite()->xPos() +
                 movement.x * float(delta_time) * speed;
@@ -146,4 +147,14 @@ void Bird::released(bool r_)
 Circle Bird::getShape()
 {
   return shape;
+}
+
+bool Bird::active()
+{
+  return alive;
+}
+
+void Bird::active(bool a_)
+{
+  alive = a_;
 }

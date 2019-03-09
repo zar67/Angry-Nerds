@@ -53,10 +53,13 @@ vector2 PhysicsComponent::updatePosition(double delta_time, bool collision)
  *   @return  The amount of rotation that should be applied to the object's
  * rotation
  */
-float PhysicsComponent::updateRotation(double delta_time)
+float PhysicsComponent::updateRotation(double delta_time, bool collision)
 {
-  vector2 arm_vector = vector2(width / 2, height / 2);
-  torque = force.crossProduct(arm_vector);
+  if (!collision)
+  {
+    vector2 arm_vector = vector2(width / 2, height / 2);
+    torque = force.crossProduct(arm_vector);
+  }
 
   float angular_acceleration = torque / inertia;
   angular_velocity += float(angular_acceleration * delta_time);
@@ -75,8 +78,8 @@ void PhysicsComponent::addForce(float fx, float fy, vector2 point)
 {
   force.x += fx;
   force.y += fy;
-  // torque +=
-  //  force.crossProduct(vector2(point.x - (width / 2), point.y - (width / 2)));
+  torque +=
+    force.crossProduct(vector2(point.x - (width / 2), point.y - (width / 2)));
 }
 
 /**
@@ -96,4 +99,9 @@ vector2 PhysicsComponent::getForce()
 float PhysicsComponent::getTorque()
 {
   return torque;
+}
+
+float PhysicsComponent::getMass()
+{
+  return mass;
 }

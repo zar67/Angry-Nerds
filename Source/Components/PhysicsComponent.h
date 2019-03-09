@@ -15,7 +15,7 @@ class PhysicsComponent
   void
   initPhysics(vector2 velocity, float a_velocity, float m_, float w_, float h_);
   vector2 updatePosition(double delta_time, bool collision);
-  float updateRotation(double delta_time);
+  float updateRotation(double delta_time, bool collision);
   void addForce(float fx, float fy, vector2 point);
   void addTorque(float t_);
 
@@ -26,6 +26,7 @@ class PhysicsComponent
 
   vector2 getForce();
   float getTorque();
+  float getMass();
 
  private:
   float gravity = 9.81f;

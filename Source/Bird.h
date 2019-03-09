@@ -24,6 +24,8 @@ class Bird : public GameObject
 
   bool released();
   void released(bool r_);
+  bool active();
+  void active(bool a_);
 
  private:
   bool collisionDetection(Block blocks[], int block_num);
@@ -31,6 +33,7 @@ class Bird : public GameObject
   Circle shape;
   float friction = 0.25f;
   bool free = false;
+  bool alive = true;
 };
 
 #endif // ANGRYNERDS_BIRD_H
