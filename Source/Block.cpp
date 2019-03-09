@@ -47,34 +47,34 @@ bool Block::collisionDetection(Block blocks[], int block_num)
         blocks[i].spriteComponent()->getSprite()->yPos() !=
           spriteComponent()->getSprite()->yPos())
     {
-        vector2 point = blocks[i].getShape().AABBCollision(shape);
+      vector2 point = blocks[i].getShape().AABBCollision(shape);
 
-        if (point.x != 0 || point.y != 0)
+      if (point.x != 0 || point.y != 0)
+      {
+        int side = getCollisionSide(point, blocks[i].getShape());
+        if (side != 0)
         {
-            int side = getCollisionSide(point, blocks[i].getShape());
-            if (side != 0)
-            {
-                // There is a valid collision
-                collision = true;
+          // There is a valid collision
+          collision = true;
 
-                blocks[i].physicsComponent()->linearVelocity(
-                        vector2(physicsComponent()->linearVelocity().x * 2,
-                                physicsComponent()->linearVelocity().y * 2));
-                // Update velocity based on side hit
-                if (side == 1 || side == 2)
-                {
-                    physicsComponent()->linearVelocity(
-                            vector2(-physicsComponent()->linearVelocity().x * 0.4f,
-                                    physicsComponent()->linearVelocity().y * 0.4f));
-                }
-                else if (side == 3 || side == 4)
-                {
-                    physicsComponent()->linearVelocity(
-                            vector2(physicsComponent()->linearVelocity().x * 0.4f,
-                                    -physicsComponent()->linearVelocity().y * 0.4f));
-                }
-            }
+          blocks[i].physicsComponent()->linearVelocity(
+            vector2(physicsComponent()->linearVelocity().x * 2,
+                    physicsComponent()->linearVelocity().y * 2));
+          // Update velocity based on side hit
+          if (side == 1 || side == 2)
+          {
+            physicsComponent()->linearVelocity(
+              vector2(-physicsComponent()->linearVelocity().x * 0.4f,
+                      physicsComponent()->linearVelocity().y * 0.4f));
+          }
+          else if (side == 3 || side == 4)
+          {
+            physicsComponent()->linearVelocity(
+              vector2(physicsComponent()->linearVelocity().x * 0.4f,
+                      -physicsComponent()->linearVelocity().y * 0.4f));
+          }
         }
+      }
     }
   }
 

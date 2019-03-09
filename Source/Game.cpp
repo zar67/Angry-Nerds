@@ -288,7 +288,7 @@ void Angry::update(const ASGE::GameTime& game_time)
       if (birds[i].released() && birds[i].active())
       {
         birds[i].update(
-                game_time.delta.count() / 1000.0f, blocks, NUM_OF_BLOCKS);
+          game_time.delta.count() / 1000.0f, blocks, NUM_OF_BLOCKS);
       }
     }
   }
