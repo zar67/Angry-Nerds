@@ -24,6 +24,10 @@ class PhysicsComponent
   void linearVelocity(vector2 v) { linear_velocity = v; }
   void angularVelocity(float v) { angular_velocity = v; }
 
+  vector2 getForce();
+  float getTorque();
+  float getMass();
+
  private:
   float gravity = 9.81f;
   float width;

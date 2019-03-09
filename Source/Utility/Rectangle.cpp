@@ -10,36 +10,34 @@
  */
 vector2 Rectangle::AABBCollision(Rectangle rectangle)
 {
-  float delta_x = rectangle.x - x;
-  float delta_y = rectangle.y - y;
-  float intersect_x = abs(delta_x) - (width / 2 + rectangle.width / 2);
-  float intersect_y = abs(delta_y) - (height / 2 + rectangle.height / 2);
+  float dx = (rectangle.x + rectangle.width / 2) - (x + width / 2);
+  float px = (rectangle.width / 2 + width / 2) - abs(dx);
 
-  if (intersect_x > 0 || intersect_y > 0)
+  float dy = (rectangle.y + rectangle.height / 2) - (y + height / 2);
+  float py = (rectangle.height / 2 + height / 2) - abs(dy);
+
+  if (px <= 0 || py <= 0)
   {
     return vector2(0, 0);
   }
 
-  // There is a collision
-  if (abs(intersect_x) < abs(intersect_y))
+  float pos_x = 0;
+  float pos_y = 0;
+
+  if (px < py)
   {
-    // Intersected on left or right side
-    if (delta_x > 0)
-    {
-      // Intersected on right side
-      return vector2(x + width, y + (height / 2));
-    }
-    // Intersected on left side
-    return vector2(x, y + (height / 2));
+    float sx = dx < 0 ? -1 : 1;
+    pos_x = (x + width / 2) + (width / 2 * sx);
+    pos_y = (rectangle.y + rectangle.height / 2);
   }
-  // Intersected on top or bottom side
-  if (delta_y > 0)
+  else
   {
-    // intersected on top side
-    return vector2(x + (width / 2), y);
+    float sy = dy < 0 ? -1 : 1;
+    pos_x = (rectangle.x + rectangle.width / 2);
+    pos_y = (y + width / 2) + (width / 2 * sy);
   }
-  // intersected on bottom side
-  return vector2(x + (width / 2), y + height);
+
+  return vector2(pos_x, pos_y);
 }
 
 /**
@@ -51,13 +49,12 @@ vector2 Rectangle::AABBCollision(Rectangle rectangle)
  */
 vector2 Rectangle::CircleCollision(Circle circle)
 {
-  float closest_x = (circle.x + circle.radius) -
-                    fmaxf(x, fminf((circle.x + circle.radius), (x + width)));
-  float closest_y = (circle.y + circle.radius) -
-                    fmaxf(y, fminf((circle.x) + circle.radius, (y + width)));
+  float closest_x = fmaxf(x, fminf((circle.x + circle.radius), (x + width)));
+  float closest_y = fmaxf(y, fminf((circle.y) + circle.radius, (y + height)));
+  float x_diff = (circle.x + circle.radius) - closest_x;
+  float y_diff = (circle.y + circle.radius) - closest_y;
 
-  if ((circle.radius * circle.radius) >
-      ((closest_x * closest_x) + (closest_y * closest_y)))
+  if ((circle.radius * circle.radius) > ((x_diff * x_diff) + (y_diff * y_diff)))
   {
     return vector2(closest_x, closest_y);
   }

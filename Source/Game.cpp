@@ -77,8 +77,7 @@ bool Angry::init()
   {
     if (birds[i].addSpriteComponent(renderer.get(), "data/Textures/parrot.png"))
     {
-      birds[i].setUpBird(
-        float(i * 60) + 20, 850, 50, vector2(0, 0), 0, 50, 3.5f);
+      birds[i].setUpBird(float(i * 60) + 20, 850);
     }
     else
     {
@@ -89,6 +88,27 @@ bool Angry::init()
 
   birds[current_bird].spriteComponent()->getSprite()->xPos(250);
   birds[current_bird].spriteComponent()->getSprite()->yPos(700);
+
+  float positions[2][NUM_OF_BLOCKS] = { { 1024, 1250, 1250, 1390, 1600 },
+                                        { 760, 690, 620, 690, 760 } };
+  int sizes[2][NUM_OF_BLOCKS] = { { 1, 1, 3, 1, 1 }, { 2, 3, 1, 3, 2 } };
+  for (int i = 0; i < NUM_OF_BLOCKS; i++)
+  {
+    std::string file = "data/Textures/Wood/" + std::to_string(sizes[0][i]) +
+                       "x" + std::to_string(sizes[1][i]) + ".png";
+    if (blocks[i].addSpriteComponent(renderer.get(), file))
+    {
+      blocks[i].setUpBlock(positions[0][i],
+                           positions[1][i],
+                           float(sizes[0][i] * 70),
+                           float(sizes[1][i] * 70));
+    }
+    else
+    {
+      std::cout << "Block Sprite " << i << " not loaded" << std::endl;
+      return false;
+    }
+  }
 
   return true;
 }
@@ -243,9 +263,9 @@ void Angry::update(const ASGE::GameTime& game_time)
         birds[current_bird].spriteComponent()->getSprite()->xPos(250);
       }
       float distance = birds[current_bird].position().distance(250, 700);
-      if (distance > 125)
+      if (distance > 100)
       {
-        float ratio = (distance - 125) / distance;
+        float ratio = (distance - 100) / distance;
         birds[current_bird].spriteComponent()->getSprite()->xPos(
           birds[current_bird].spriteComponent()->getSprite()->xPos() *
             (1 - ratio) +
@@ -255,39 +275,20 @@ void Angry::update(const ASGE::GameTime& game_time)
             (1 - ratio) +
           ratio * 700);
       }
+    }
 
-      /*if (mouse_x <
-          50 + birds[current_bird].spriteComponent()->getSprite()->width() / 2)
-      {
-        birds[current_bird].spriteComponent()->getSprite()->xPos(50);
-      }
-      else if (mouse_x >
-               250 +
-                 birds[current_bird].spriteComponent()->getSprite()->width() /
-                   2)
-      {
-        birds[current_bird].spriteComponent()->getSprite()->xPos(250);
-      }
-      if (mouse_y < 650)
-      {
-        birds[current_bird].spriteComponent()->getSprite()->yPos(
-          650 -
-          birds[current_bird].spriteComponent()->getSprite()->height() / 2);
-      }
-      else if (mouse_y >
-               800 +
-                 birds[current_bird].spriteComponent()->getSprite()->height() /
-                   2)
-      {
-        birds[current_bird].spriteComponent()->getSprite()->yPos(800);
-      }*/
+    for (int i = 0; i < NUM_OF_BLOCKS; i++)
+    {
+      blocks[i].update(
+        game_time.delta.count() / 1000.0f, blocks, NUM_OF_BLOCKS);
     }
 
     for (int i = 0; i < NUM_OF_BIRDS; i++)
     {
-      if (birds[i].released())
+      if (birds[i].released() && birds[i].active())
       {
-        birds[i].update(game_time.delta.count() / 1000.0f);
+        birds[i].update(
+                game_time.delta.count() / 1000.0f, blocks, NUM_OF_BLOCKS);
       }
     }
   }
@@ -314,7 +315,15 @@ void Angry::render(const ASGE::GameTime& game_time)
 
     for (int i = 0; i < NUM_OF_BIRDS; i++)
     {
-      renderer->renderSprite(*birds[i].spriteComponent()->getSprite());
+      if (birds[i].active())
+      {
+        renderer->renderSprite(*birds[i].spriteComponent()->getSprite());
+      }
+    }
+
+    for (int i = 0; i < NUM_OF_BLOCKS; i++)
+    {
+      renderer->renderSprite(*blocks[i].spriteComponent()->getSprite());
     }
   }
 }

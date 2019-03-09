@@ -27,10 +27,7 @@ class GameObject
 
   vector2 position();
 
-  virtual void update(double delta_time){};
-
  protected:
-  virtual bool collisionDetection() { return false; };
   void freeSprite();
   void freePhysics();
   SpriteComponent* sprite_component = nullptr;
