@@ -28,6 +28,7 @@ class GameObject
   vector2 position();
 
  protected:
+  int getCollisionSide(vector2 point, Rectangle col_shape);
   void freeSprite();
   void freePhysics();
   SpriteComponent* sprite_component = nullptr;

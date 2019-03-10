@@ -6,7 +6,6 @@
 #include <Engine/InputEvents.h>
 #include <Engine/Keys.h>
 #include <Engine/Sprite.h>
-#include <iostream>
 
 /**
 *   @brief   Default Constructor.
@@ -60,14 +59,14 @@ bool Angry::init()
 
   if (!loadBackgrounds())
   {
-    std::cout << "Background not loaded" << std::endl;
+    ASGE::DebugPrinter() << "Background not loaded" << std::endl;
     return false;
   }
 
   if (!menu_layer.addSpriteComponent(renderer.get(),
                                      "data/Textures/Backdrops/menu.jpg"))
   {
-    std::cout << "Menu not loaded" << std::endl;
+    ASGE::DebugPrinter() << "Menu not loaded" << std::endl;
     return false;
   }
 
@@ -81,7 +80,7 @@ bool Angry::init()
     }
     else
     {
-      std::cout << "Bird Sprite " << i << " not loaded" << std::endl;
+      ASGE::DebugPrinter() << "Bird Sprite " << i << " not loaded" << std::endl;
       return false;
     }
   }
@@ -105,9 +104,20 @@ bool Angry::init()
     }
     else
     {
-      std::cout << "Block Sprite " << i << " not loaded" << std::endl;
+      ASGE::DebugPrinter() << "Block Sprite " << i << " not loaded"
+                           << std::endl;
       return false;
     }
+  }
+
+  if (pigs[0].addSpriteComponent(renderer.get(), "data/Textures/duck.png"))
+  {
+    pigs[0].setUpPig(1340, 560);
+  }
+  else
+  {
+    ASGE::DebugPrinter() << "Pig Sprite not loaded" << std::endl;
+    return false;
   }
 
   return true;
@@ -287,7 +297,19 @@ void Angry::update(const ASGE::GameTime& game_time)
     {
       if (birds[i].released() && birds[i].active())
       {
-        birds[i].update(
+        birds[i].update(game_time.delta.count() / 1000.0f,
+                        blocks,
+                        NUM_OF_BLOCKS,
+                        pigs,
+                        NUM_OF_PIGS);
+      }
+    }
+
+    for (int i = 0; i < NUM_OF_PIGS; i++)
+    {
+      if (pigs[i].active())
+      {
+        pigs[i].update(
           game_time.delta.count() / 1000.0f, blocks, NUM_OF_BLOCKS);
       }
     }
@@ -324,6 +346,11 @@ void Angry::render(const ASGE::GameTime& game_time)
     for (int i = 0; i < NUM_OF_BLOCKS; i++)
     {
       renderer->renderSprite(*blocks[i].spriteComponent()->getSprite());
+    }
+
+    for (int i = 0; i < NUM_OF_PIGS; i++)
+    {
+      renderer->renderSprite(*pigs[i].spriteComponent()->getSprite());
     }
   }
 }

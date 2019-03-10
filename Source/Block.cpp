@@ -35,10 +35,6 @@ bool Block::collisionDetection(Block blocks[], int block_num)
               -physics_component->linearVelocity().y * friction));
   }
 
-  // Pig Collision
-  // For each pig do AABB/circle collision
-  // If hit pig do force updates
-
   // Block collision
   for (int i = 0; i < block_num; i++)
   {
@@ -58,8 +54,8 @@ bool Block::collisionDetection(Block blocks[], int block_num)
           collision = true;
 
           blocks[i].physicsComponent()->linearVelocity(
-            vector2(physicsComponent()->linearVelocity().x * 2,
-                    physicsComponent()->linearVelocity().y * 2));
+            vector2(physicsComponent()->linearVelocity().x,
+                    physicsComponent()->linearVelocity().y));
           // Update velocity based on side hit
           if (side == 1 || side == 2)
           {
@@ -79,29 +75,6 @@ bool Block::collisionDetection(Block blocks[], int block_num)
   }
 
   return collision;
-}
-
-int Block::getCollisionSide(vector2 point, Rectangle col_shape)
-{
-  if (point.x == col_shape.x && physicsComponent()->linearVelocity().x > 0)
-  {
-    return 1;
-  }
-  else if (point.x == col_shape.x + col_shape.width &&
-           physicsComponent()->linearVelocity().x < 0)
-  {
-    return 2;
-  }
-  else if (point.y == col_shape.y && physicsComponent()->linearVelocity().y > 0)
-  {
-    return 3;
-  }
-  else if (point.y == col_shape.y + col_shape.height &&
-           physicsComponent()->linearVelocity().y < 0)
-  {
-    return 4;
-  }
-  return 0;
 }
 
 void Block::update(double delta_time, Block blocks[], int block_num)

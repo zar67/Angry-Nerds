@@ -24,7 +24,6 @@ class Block : public GameObject
 
  private:
   bool collisionDetection(Block blocks[], int block_num);
-  int getCollisionSide(vector2 point, Rectangle col_shape);
   Rectangle shape;
   float friction = 0.1f;
 };
