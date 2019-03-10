@@ -55,8 +55,8 @@ bool Bird::collisionDetection(Block blocks[],
     if (point.x != 0 || point.y != 0)
     {
       pigs[i].physicsComponent()->linearVelocity(
-        vector2(physicsComponent()->linearVelocity().x * 2,
-                physicsComponent()->linearVelocity().y * 2));
+        vector2(physicsComponent()->linearVelocity().x,
+                physicsComponent()->linearVelocity().y));
 
       physicsComponent()->linearVelocity(
         vector2(-physicsComponent()->linearVelocity().x * 0.4f,

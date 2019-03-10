@@ -304,6 +304,15 @@ void Angry::update(const ASGE::GameTime& game_time)
                         NUM_OF_PIGS);
       }
     }
+
+    for (int i = 0; i < NUM_OF_PIGS; i++)
+    {
+      if (pigs[i].active())
+      {
+        pigs[i].update(game_time.delta.count() / 1000.0f, blocks, NUM_OF_BLOCKS);
+      }
+    }
+
   }
 }
 

@@ -58,8 +58,8 @@ bool Block::collisionDetection(Block blocks[], int block_num)
           collision = true;
 
           blocks[i].physicsComponent()->linearVelocity(
-            vector2(physicsComponent()->linearVelocity().x * 2,
-                    physicsComponent()->linearVelocity().y * 2));
+            vector2(physicsComponent()->linearVelocity().x,
+                    physicsComponent()->linearVelocity().y));
           // Update velocity based on side hit
           if (side == 1 || side == 2)
           {
