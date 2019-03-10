@@ -7,9 +7,11 @@
 
 #include "Block.h"
 #include "Components/GameObject.h"
+#include "Pig.h"
 #include "Utility/Circle.h"
 
 class Block;
+class Pig;
 
 class Bird : public GameObject
 {
@@ -17,7 +19,8 @@ class Bird : public GameObject
   Bird() = default;
   ~Bird() override = default;
 
-  void update(double delta_time, Block blocks[], int block_num);
+  void update(
+    double delta_time, Block blocks[], int block_num, Pig pigs[], int pig_num);
   void setUpBird(float x_, float y_);
 
   Circle getShape();
@@ -28,8 +31,8 @@ class Bird : public GameObject
   void active(bool a_);
 
  private:
-  bool collisionDetection(Block blocks[], int block_num);
-  int getCollisionSide(vector2 point, Rectangle col_shape);
+  bool
+  collisionDetection(Block blocks[], int block_num, Pig pigs[], int pig_num);
   Circle shape;
   float friction = 0.25f;
   bool free = false;

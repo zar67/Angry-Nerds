@@ -101,3 +101,26 @@ vector2 GameObject::position()
   return vector2(sprite_component->getSprite()->xPos(),
                  sprite_component->getSprite()->yPos());
 }
+
+int GameObject::getCollisionSide(vector2 point, Rectangle col_shape)
+{
+  if (point.x == col_shape.x && physicsComponent()->linearVelocity().x > 0)
+  {
+    return 1;
+  }
+  else if (point.x == col_shape.x + col_shape.width &&
+           physicsComponent()->linearVelocity().x < 0)
+  {
+    return 2;
+  }
+  else if (point.y == col_shape.y && physicsComponent()->linearVelocity().y > 0)
+  {
+    return 3;
+  }
+  else if (point.y == col_shape.y + col_shape.height &&
+           physicsComponent()->linearVelocity().y < 0)
+  {
+    return 4;
+  }
+  return 0;
+}
