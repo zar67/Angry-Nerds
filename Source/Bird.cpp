@@ -63,8 +63,6 @@ bool Bird::collisionDetection(Block blocks[],
                 -physicsComponent()->linearVelocity().y * 0.4f));
     }
   }
-  // For each pig do circle/circle collision
-  // If hit pig do force updates
 
   // Block collision
   for (int i = 0; i < block_num; i++)

@@ -309,10 +309,10 @@ void Angry::update(const ASGE::GameTime& game_time)
     {
       if (pigs[i].active())
       {
-        pigs[i].update(game_time.delta.count() / 1000.0f, blocks, NUM_OF_BLOCKS);
+        pigs[i].update(
+          game_time.delta.count() / 1000.0f, blocks, NUM_OF_BLOCKS);
       }
     }
-
   }
 }
 

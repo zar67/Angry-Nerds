@@ -35,10 +35,6 @@ bool Block::collisionDetection(Block blocks[], int block_num)
               -physics_component->linearVelocity().y * friction));
   }
 
-  // Pig Collision
-  // For each pig do AABB/circle collision
-  // If hit pig do force updates
-
   // Block collision
   for (int i = 0; i < block_num; i++)
   {
