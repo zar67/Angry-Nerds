@@ -52,7 +52,19 @@ bool Bird::collisionDetection(Block blocks[],
   {
     vector2 point = pigs[i].getShape().CircleCollision(shape);
 
-    if (point.x != 0 || point.y != 0)
+    if ((point.x != 0 || point.y != 0) &&
+        ((point.x < pigs[i].spriteComponent()->getSprite()->xPos() +
+                      pigs[i].spriteComponent()->getSprite()->width() / 2 &&
+          physicsComponent()->linearVelocity().x >= 0) ||
+         (point.x > pigs[i].spriteComponent()->getSprite()->xPos() +
+                      pigs[i].spriteComponent()->getSprite()->width() / 2 &&
+          physicsComponent()->linearVelocity().x <= 0) ||
+         (point.y < pigs[i].spriteComponent()->getSprite()->yPos() +
+                      pigs[i].spriteComponent()->getSprite()->height() / 2 &&
+          physicsComponent()->linearVelocity().y >= 0) ||
+         (point.y > pigs[i].spriteComponent()->getSprite()->yPos() +
+                      pigs[i].spriteComponent()->getSprite()->height() / 2 &&
+          physicsComponent()->linearVelocity().y <= 0)))
     {
       pigs[i].physicsComponent()->linearVelocity(
         vector2(physicsComponent()->linearVelocity().x,
