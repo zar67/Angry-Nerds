@@ -102,7 +102,7 @@ vector2 GameObject::position()
                  sprite_component->getSprite()->yPos());
 }
 
-int GameObject::getCollisionSide(vector2 point, Rectangle col_shape)
+int GameObject::getCollisionSideRect(vector2 point, Rectangle col_shape)
 {
   if (point.x == col_shape.x && physicsComponent()->linearVelocity().x > 0)
   {
@@ -123,4 +123,34 @@ int GameObject::getCollisionSide(vector2 point, Rectangle col_shape)
     return 4;
   }
   return 0;
+}
+
+int GameObject::getCollisionSideCir(vector2 point, Circle col_shape)
+{
+  if (point.x < col_shape.x + col_shape.radius &&
+      physicsComponent()->linearVelocity().x >= 0)
+  {
+    return 1;
+  }
+  else if (point.x > col_shape.x + col_shape.radius &&
+           physicsComponent()->linearVelocity().x <= 0)
+  {
+    return 2;
+  }
+  else if (point.y < col_shape.y + col_shape.radius &&
+           physicsComponent()->linearVelocity().y >= 0)
+  {
+    return 3;
+  }
+  else if (point.y > col_shape.y + col_shape.radius &&
+           physicsComponent()->linearVelocity().y <= 0)
+  {
+    return 4;
+  }
+  return 0;
+}
+
+bool GameObject::groundCollisionDetection(float y, float height, float dir_y)
+{
+  return y > 900 - height && dir_y >= 0;
 }

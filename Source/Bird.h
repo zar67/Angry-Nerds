@@ -31,8 +31,7 @@ class Bird : public GameObject
   void active(bool a_);
 
  private:
-  bool
-  collisionDetection(Block blocks[], int block_num, Pig pigs[], int pig_num);
+  bool collision(Block* blocks, int block_num, Pig* pigs, int pig_num);
   Circle shape;
   float friction = 0.25f;
   bool free = false;

@@ -23,7 +23,7 @@ class Block : public GameObject
   Rectangle getShape();
 
  private:
-  bool collisionDetection(Block blocks[], int block_num);
+  bool collision(Block* blocks, int block_num);
   Rectangle shape;
   float friction = 0.1f;
 };

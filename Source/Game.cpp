@@ -72,6 +72,37 @@ bool Angry::init()
 
   // TODO: Setup and load a catapult sprite
 
+  if (!setupBirds())
+  {
+    return false;
+  }
+  birds[current_bird].spriteComponent()->getSprite()->xPos(250);
+  birds[current_bird].spriteComponent()->getSprite()->yPos(700);
+
+  if (!setupBlocks())
+  {
+    return false;
+  }
+
+  if (!setupPigs())
+  {
+    return false;
+  }
+
+  return true;
+}
+
+bool Angry::loadBackgrounds()
+{
+  std::string filename = "data/Textures/Backdrops/lvl";
+  filename += std::to_string(std::rand() % 3 + 1);
+  filename += ".png";
+
+  return background_layer.addSpriteComponent(renderer.get(), filename);
+}
+
+bool Angry::setupBirds()
+{
   for (int i = 0; i < NUM_OF_BIRDS; i++)
   {
     if (birds[i].addSpriteComponent(renderer.get(), "data/Textures/parrot.png"))
@@ -84,10 +115,25 @@ bool Angry::init()
       return false;
     }
   }
+  return true;
+}
 
-  birds[current_bird].spriteComponent()->getSprite()->xPos(250);
-  birds[current_bird].spriteComponent()->getSprite()->yPos(700);
+bool Angry::setupPigs()
+{
+  if (pigs[0].addSpriteComponent(renderer.get(), "data/Textures/duck.png"))
+  {
+    pigs[0].setUpPig(1340, 560);
+    return true;
+  }
+  else
+  {
+    ASGE::DebugPrinter() << "Pig Sprite not loaded" << std::endl;
+    return false;
+  }
+}
 
+bool Angry::setupBlocks()
+{
   float positions[2][NUM_OF_BLOCKS] = { { 1024, 1250, 1250, 1390, 1600 },
                                         { 760, 690, 620, 690, 760 } };
   int sizes[2][NUM_OF_BLOCKS] = { { 1, 1, 3, 1, 1 }, { 2, 3, 1, 3, 2 } };
@@ -109,27 +155,7 @@ bool Angry::init()
       return false;
     }
   }
-
-  if (pigs[0].addSpriteComponent(renderer.get(), "data/Textures/duck.png"))
-  {
-    pigs[0].setUpPig(1340, 560);
-  }
-  else
-  {
-    ASGE::DebugPrinter() << "Pig Sprite not loaded" << std::endl;
-    return false;
-  }
-
   return true;
-}
-
-bool Angry::loadBackgrounds()
-{
-  std::string filename = "data/Textures/Backdrops/lvl";
-  filename += std::to_string(std::rand() % 3 + 1);
-  filename += ".png";
-
-  return background_layer.addSpriteComponent(renderer.get(), filename);
 }
 
 /**
@@ -257,34 +283,7 @@ void Angry::update(const ASGE::GameTime& game_time)
   {
     if (clicked_on_bird)
     {
-      // Update bird position
-      inputs->getCursorPos(mouse_x, mouse_y);
-      birds[current_bird].spriteComponent()->getSprite()->xPos(
-        float(mouse_x) -
-        birds[current_bird].spriteComponent()->getSprite()->width() / 2);
-      birds[current_bird].spriteComponent()->getSprite()->yPos(
-        float(mouse_y) -
-        birds[current_bird].spriteComponent()->getSprite()->height() / 2);
-
-      // Limit bird movement to semi-circle
-      if (mouse_x >
-          250 + birds[current_bird].spriteComponent()->getSprite()->width() / 2)
-      {
-        birds[current_bird].spriteComponent()->getSprite()->xPos(250);
-      }
-      float distance = birds[current_bird].position().distance(250, 700);
-      if (distance > 100)
-      {
-        float ratio = (distance - 100) / distance;
-        birds[current_bird].spriteComponent()->getSprite()->xPos(
-          birds[current_bird].spriteComponent()->getSprite()->xPos() *
-            (1 - ratio) +
-          ratio * 250);
-        birds[current_bird].spriteComponent()->getSprite()->yPos(
-          birds[current_bird].spriteComponent()->getSprite()->yPos() *
-            (1 - ratio) +
-          ratio * 700);
-      }
+      moveBirdInCatapult();
     }
 
     for (int i = 0; i < NUM_OF_BLOCKS; i++)
@@ -313,6 +312,36 @@ void Angry::update(const ASGE::GameTime& game_time)
           game_time.delta.count() / 1000.0f, blocks, NUM_OF_BLOCKS);
       }
     }
+  }
+}
+
+void Angry::moveBirdInCatapult()
+{
+  // Update bird position
+  inputs->getCursorPos(mouse_x, mouse_y);
+  birds[current_bird].spriteComponent()->getSprite()->xPos(
+    float(mouse_x) -
+    birds[current_bird].spriteComponent()->getSprite()->width() / 2);
+  birds[current_bird].spriteComponent()->getSprite()->yPos(
+    float(mouse_y) -
+    birds[current_bird].spriteComponent()->getSprite()->height() / 2);
+
+  // Limit bird movement to semi-circle
+  if (mouse_x >
+      250 + birds[current_bird].spriteComponent()->getSprite()->width() / 2)
+  {
+    birds[current_bird].spriteComponent()->getSprite()->xPos(250);
+  }
+  float distance = birds[current_bird].position().distance(250, 700);
+  if (distance > 100)
+  {
+    float ratio = (distance - 100) / distance;
+    birds[current_bird].spriteComponent()->getSprite()->xPos(
+      birds[current_bird].spriteComponent()->getSprite()->xPos() * (1 - ratio) +
+      ratio * 250);
+    birds[current_bird].spriteComponent()->getSprite()->yPos(
+      birds[current_bird].spriteComponent()->getSprite()->yPos() * (1 - ratio) +
+      ratio * 700);
   }
 }
 

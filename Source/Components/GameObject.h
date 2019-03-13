@@ -26,9 +26,11 @@ class GameObject
   PhysicsComponent* physicsComponent();
 
   vector2 position();
+  bool groundCollisionDetection(float y, float height, float dir_y);
 
  protected:
-  int getCollisionSide(vector2 point, Rectangle col_shape);
+  int getCollisionSideRect(vector2 point, Rectangle col_shape);
+  int getCollisionSideCir(vector2 point, Circle col_shape);
   void freeSprite();
   void freePhysics();
   SpriteComponent* sprite_component = nullptr;

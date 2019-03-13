@@ -17,15 +17,16 @@ void Pig::setUpPig(float x_, float y_)
   speed = 3.5f;
 }
 
-bool Pig::collisionDetection(Block* blocks, int block_num)
+bool Pig::collision(Block* blocks, int block_num)
 {
-  bool collision = false;
+  bool collide = false;
 
   // Ground Collision
-  if (spriteComponent()->getSprite()->yPos() > 850 &&
-      physics_component->linearVelocity().y >= 0)
+  if (groundCollisionDetection(spriteComponent()->getSprite()->yPos(),
+                               spriteComponent()->getSprite()->height(),
+                               physics_component->linearVelocity().y))
   {
-    collision = true;
+    collide = true;
     spriteComponent()->getSprite()->yPos(850);
     physics_component->linearVelocity(
       vector2(physics_component->linearVelocity().x * friction,
@@ -39,11 +40,11 @@ bool Pig::collisionDetection(Block* blocks, int block_num)
 
     if (point.x != 0 || point.y != 0)
     {
-      int side = getCollisionSide(point, blocks[i].getShape());
+      int side = getCollisionSideRect(point, blocks[i].getShape());
       if (side != 0)
       {
         // There is a valid collision
-        collision = true;
+        collide = true;
 
         blocks[i].physicsComponent()->linearVelocity(
           vector2(physicsComponent()->linearVelocity().x,
@@ -65,15 +66,15 @@ bool Pig::collisionDetection(Block* blocks, int block_num)
     }
   }
 
-  return collision;
+  return collide;
 }
 
 void Pig::update(double delta_time, Block* blocks, int block_num)
 {
-  bool collision = collisionDetection(blocks, block_num);
+  bool collide = collision(blocks, block_num);
 
-  vector2 movement = physics_component->updatePosition(delta_time, collision);
-  float rotation = physics_component->updateRotation(delta_time, collision);
+  vector2 movement = physics_component->updatePosition(delta_time, collide);
+  float rotation = physics_component->updateRotation(delta_time, collide);
 
   float new_x = spriteComponent()->getSprite()->xPos() +
                 movement.x * float(delta_time) * speed;

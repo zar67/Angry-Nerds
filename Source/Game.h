@@ -27,6 +27,11 @@ class Angry : public ASGE::OGLGame
   void clickHandler(const ASGE::SharedEventData data);
   void setupResolution();
   bool loadBackgrounds();
+  bool setupBirds();
+  bool setupPigs();
+  bool setupBlocks();
+
+  void moveBirdInCatapult();
 
   virtual void update(const ASGE::GameTime&) override;
   virtual void render(const ASGE::GameTime&) override;

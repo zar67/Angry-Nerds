@@ -23,24 +23,21 @@ void Bird::setUpBird(float x_, float y_)
   shape.radius = 25;
   speed = 3.5f;
 }
-
 /**
  *   @brief   Collision Detection
  *   @details Detects collision against the ground, pigs and blocks
  *   @return  Bool stating whether a collision has happened
  */
-bool Bird::collisionDetection(Block blocks[],
-                              int block_num,
-                              Pig pigs[],
-                              int pig_num)
+bool Bird::collision(Block* blocks, int block_num, Pig* pigs, int pig_num)
 {
-  bool collision = false;
+  bool collide = false;
 
   // Ground Collision
-  if (spriteComponent()->getSprite()->yPos() > 850 &&
-      physics_component->linearVelocity().y >= 0)
+  if (groundCollisionDetection(spriteComponent()->getSprite()->yPos(),
+                               spriteComponent()->getSprite()->height(),
+                               physicsComponent()->linearVelocity().y))
   {
-    collision = true;
+    collide = true;
     spriteComponent()->getSprite()->yPos(850);
     physics_component->linearVelocity(
       vector2(physics_component->linearVelocity().x * friction,
@@ -53,18 +50,7 @@ bool Bird::collisionDetection(Block blocks[],
     vector2 point = pigs[i].getShape().CircleCollision(shape);
 
     if ((point.x != 0 || point.y != 0) &&
-        ((point.x < pigs[i].spriteComponent()->getSprite()->xPos() +
-                      pigs[i].spriteComponent()->getSprite()->width() / 2 &&
-          physicsComponent()->linearVelocity().x >= 0) ||
-         (point.x > pigs[i].spriteComponent()->getSprite()->xPos() +
-                      pigs[i].spriteComponent()->getSprite()->width() / 2 &&
-          physicsComponent()->linearVelocity().x <= 0) ||
-         (point.y < pigs[i].spriteComponent()->getSprite()->yPos() +
-                      pigs[i].spriteComponent()->getSprite()->height() / 2 &&
-          physicsComponent()->linearVelocity().y >= 0) ||
-         (point.y > pigs[i].spriteComponent()->getSprite()->yPos() +
-                      pigs[i].spriteComponent()->getSprite()->height() / 2 &&
-          physicsComponent()->linearVelocity().y <= 0)))
+        getCollisionSideCir(point, shape) != 0)
     {
       pigs[i].physicsComponent()->linearVelocity(
         vector2(physicsComponent()->linearVelocity().x,
@@ -83,11 +69,11 @@ bool Bird::collisionDetection(Block blocks[],
 
     if (point.x != 0 || point.y != 0)
     {
-      int side = getCollisionSide(point, blocks[i].getShape());
+      int side = getCollisionSideRect(point, blocks[i].getShape());
       if (side != 0)
       {
         // There is a valid collision
-        collision = true;
+        collide = true;
 
         blocks[i].physicsComponent()->linearVelocity(
           vector2(physicsComponent()->linearVelocity().x * 2,
@@ -109,7 +95,7 @@ bool Bird::collisionDetection(Block blocks[],
     }
   }
 
-  return collision;
+  return collide;
 }
 
 /**
@@ -121,10 +107,10 @@ bool Bird::collisionDetection(Block blocks[],
 void Bird::update(
   double delta_time, Block blocks[], int block_num, Pig pigs[], int pig_num)
 {
-  bool collision = collisionDetection(blocks, block_num, pigs, pig_num);
+  bool collide = collision(blocks, block_num, pigs, pig_num);
 
-  vector2 movement = physics_component->updatePosition(delta_time, collision);
-  float rotation = physics_component->updateRotation(delta_time, collision);
+  vector2 movement = physics_component->updatePosition(delta_time, collide);
+  float rotation = physics_component->updateRotation(delta_time, collide);
 
   float new_x = spriteComponent()->getSprite()->xPos() +
                 movement.x * float(delta_time) * speed;
