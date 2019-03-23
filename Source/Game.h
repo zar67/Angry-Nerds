@@ -8,7 +8,7 @@
 #include "Pig.h"
 //#include "Utility/Rectangle.h"
 
-const int NUM_OF_BIRDS = 6;
+const int NUM_OF_BIRDS = 4;
 const int NUM_OF_BLOCKS = 5;
 const int NUM_OF_PIGS = 2;
 
@@ -45,6 +45,7 @@ class Angry : public ASGE::OGLGame
   // Add your GameObjects
   GameObject background_layer;
   GameObject menu_layer;
+  GameObject catapult;
 
   Bird birds[NUM_OF_BIRDS];
   Block blocks[NUM_OF_BLOCKS];
@@ -71,4 +72,7 @@ class Angry : public ASGE::OGLGame
   bool in_menu = true;
   bool game_over = false;
   bool game_won = false;
+
+  bool birds_used = false;
+  double stop_timer = 0;
 };

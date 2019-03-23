@@ -70,7 +70,13 @@ bool Angry::init()
     return false;
   }
 
-  // TODO: Setup and load a catapult sprite
+  if (catapult.addSpriteComponent(renderer.get(), "data/Textures/catapult.png"))
+  {
+      catapult.spriteComponent()->getSprite()->xPos(170);
+      catapult.spriteComponent()->getSprite()->yPos(680);
+      catapult.spriteComponent()->getSprite()->height(220);
+      catapult.spriteComponent()->getSprite()->width(220);
+  }
 
   if (!setupBirds())
   {
@@ -181,6 +187,8 @@ void Angry::restart()
 {
   game_over = false;
   game_won = false;
+  birds_used = false;
+  stop_timer = 0;
   score = 0;
   current_bird = NUM_OF_BIRDS - 1;
 
@@ -314,6 +322,15 @@ void Angry::update(const ASGE::GameTime& game_time)
       }
     }
 
+    if (birds_used)
+    {
+      stop_timer += game_time.delta.count();
+      if (stop_timer >= 6000)
+      {
+        game_over = true;
+      }
+    }
+
     if (clicked_on_bird)
     {
       moveBirdInCatapult();
@@ -372,7 +389,7 @@ void Angry::releaseBird()
   current_bird--;
   if (current_bird < 0)
   {
-    game_over = true;
+    birds_used = true;
   }
   else
   {
@@ -437,6 +454,8 @@ void Angry::render(const ASGE::GameTime& game_time)
     {
       renderer->renderSprite(*birds[i].spriteComponent()->getSprite());
     }
+
+    renderer->renderSprite(*catapult.spriteComponent()->getSprite());
 
     for (int i = 0; i < NUM_OF_BLOCKS; i++)
     {
