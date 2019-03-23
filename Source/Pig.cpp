@@ -48,14 +48,14 @@ bool Pig::collision(Block* blocks, int block_num)
 
         // Damage Pig
         if (blocks[i].physicsComponent()->linearVelocity().x != 0 ||
-            blocks[i].physicsComponent()->linearVelocity().x != 0)
+            blocks[i].physicsComponent()->linearVelocity().y != 0)
         {
           float magnitude =
             blocks[i].physicsComponent()->linearVelocity().length();
           damage(static_cast<int>(magnitude));
         }
         else if (physics_component->linearVelocity().x != 0 ||
-                 physics_component->linearVelocity().x != 0)
+                 physics_component->linearVelocity().y != 0)
         {
           float magnitude = physics_component->linearVelocity().length();
           damage(static_cast<int>(magnitude));

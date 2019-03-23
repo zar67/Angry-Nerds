@@ -29,7 +29,6 @@ class Pig : public GameObject
  private:
   bool collision(Block* blocks, int block_num);
 
-
   Circle shape;
   float friction = 0.25f;
 

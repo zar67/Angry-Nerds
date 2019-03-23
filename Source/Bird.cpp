@@ -56,26 +56,26 @@ bool Bird::collision(Block* blocks, int block_num, Pig* pigs, int pig_num)
       {
         // Damage Pig
         if (pigs[i].physicsComponent()->linearVelocity().x != 0 ||
-                pigs[i].physicsComponent()->linearVelocity().x != 0)
+            pigs[i].physicsComponent()->linearVelocity().y != 0)
         {
           float magnitude =
-                  pigs[i].physicsComponent()->linearVelocity().length();
+            pigs[i].physicsComponent()->linearVelocity().length();
           pigs[i].damage(static_cast<int>(magnitude));
         }
         else if (physics_component->linearVelocity().x != 0 ||
-                 physics_component->linearVelocity().x != 0)
+                 physics_component->linearVelocity().y != 0)
         {
           float magnitude = physics_component->linearVelocity().length();
           pigs[i].damage(static_cast<int>(magnitude));
         }
 
         pigs[i].physicsComponent()->linearVelocity(
-                vector2(physics_component->linearVelocity().x,
-                        physics_component->linearVelocity().y));
+          vector2(physics_component->linearVelocity().x,
+                  physics_component->linearVelocity().y));
 
         physics_component->linearVelocity(
-                vector2(-physics_component->linearVelocity().x * 0.4f,
-                        -physics_component->linearVelocity().y * 0.4f));
+          vector2(-physics_component->linearVelocity().x * 0.4f,
+                  -physics_component->linearVelocity().y * 0.4f));
       }
     }
   }
