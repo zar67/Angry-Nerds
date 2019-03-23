@@ -46,21 +46,6 @@ bool Pig::collision(Block* blocks, int block_num)
         // There is a valid collision
         collide = true;
 
-        // Damage Pig
-        if (blocks[i].physicsComponent()->linearVelocity().x != 0 ||
-            blocks[i].physicsComponent()->linearVelocity().y != 0)
-        {
-          float magnitude =
-            blocks[i].physicsComponent()->linearVelocity().length();
-          damage(static_cast<int>(magnitude));
-        }
-        else if (physics_component->linearVelocity().x != 0 ||
-                 physics_component->linearVelocity().y != 0)
-        {
-          float magnitude = physics_component->linearVelocity().length();
-          damage(static_cast<int>(magnitude));
-        }
-
         blocks[i].physicsComponent()->linearVelocity(
           vector2(physics_component->linearVelocity().x,
                   physics_component->linearVelocity().y));
@@ -88,11 +73,6 @@ bool Pig::collision(Block* blocks, int block_num)
 
 void Pig::update(double delta_time, Block* blocks, int block_num)
 {
-  if (strength <= 0)
-  {
-    active(false);
-  }
-
   bool collide = collision(blocks, block_num);
 
   vector2 movement = physics_component->updatePosition(delta_time, collide);
@@ -107,16 +87,6 @@ void Pig::update(double delta_time, Block* blocks, int block_num)
 
   sprite_component->getSprite()->rotationInRadians((rotation * (3.14f / 180)) *
                                                    float(delta_time));
-}
-
-int Pig::health()
-{
-  return strength;
-}
-
-void Pig::damage(int hp)
-{
-  strength -= hp;
 }
 
 bool Pig::active()

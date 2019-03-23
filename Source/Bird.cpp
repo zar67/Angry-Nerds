@@ -26,7 +26,8 @@ void Bird::setUpBird(float x_, float y_)
  *   @details Detects collision against the ground, pigs and blocks
  *   @return  Bool stating whether a collision has happened
  */
-bool Bird::collision(Block* blocks, int block_num, Pig* pigs, int pig_num)
+bool Bird::collision(
+  Block* blocks, int block_num, Pig* pigs, int pig_num, int* score)
 {
   bool collide = false;
 
@@ -55,20 +56,8 @@ bool Bird::collision(Block* blocks, int block_num, Pig* pigs, int pig_num)
           getCollisionSideCir(point, sprite_component->getBoundingCircle()) !=
             0)
       {
-        // Damage Pig
-        if (pigs[i].physicsComponent()->linearVelocity().x != 0 ||
-            pigs[i].physicsComponent()->linearVelocity().y != 0)
-        {
-          float magnitude =
-            pigs[i].physicsComponent()->linearVelocity().length();
-          pigs[i].damage(static_cast<int>(magnitude));
-        }
-        else if (physics_component->linearVelocity().x != 0 ||
-                 physics_component->linearVelocity().y != 0)
-        {
-          float magnitude = physics_component->linearVelocity().length();
-          pigs[i].damage(static_cast<int>(magnitude));
-        }
+        pigs[i].active(false);
+        *score += 100;
 
         pigs[i].physicsComponent()->linearVelocity(
           vector2(physics_component->linearVelocity().x,
@@ -96,6 +85,7 @@ bool Bird::collision(Block* blocks, int block_num, Pig* pigs, int pig_num)
       {
         // There is a valid collision
         collide = true;
+        *score += 10;
 
         blocks[i].physicsComponent()->linearVelocity(
           vector2(physics_component->linearVelocity().x * 2,
@@ -117,7 +107,6 @@ bool Bird::collision(Block* blocks, int block_num, Pig* pigs, int pig_num)
     }
     physics_component->linearVelocity().normalise();
   }
-
   return collide;
 }
 
@@ -127,10 +116,14 @@ bool Bird::collision(Block* blocks, int block_num, Pig* pigs, int pig_num)
  * position
  *   @return  void
  */
-void Bird::update(
-  double delta_time, Block blocks[], int block_num, Pig pigs[], int pig_num)
+void Bird::update(double delta_time,
+                  Block blocks[],
+                  int block_num,
+                  Pig pigs[],
+                  int pig_num,
+                  int* score)
 {
-  bool collide = collision(blocks, block_num, pigs, pig_num);
+  bool collide = collision(blocks, block_num, pigs, pig_num, score);
 
   vector2 movement = physics_component->updatePosition(delta_time, collide);
   float rotation = physics_component->updateRotation(delta_time, collide);
@@ -154,14 +147,4 @@ bool Bird::released()
 void Bird::released(bool r_)
 {
   free = r_;
-}
-
-bool Bird::active()
-{
-  return alive;
-}
-
-void Bird::active(bool a_)
-{
-  alive = a_;
 }

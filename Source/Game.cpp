@@ -120,33 +120,34 @@ bool Angry::setupBirds()
 
 bool Angry::setupPigs()
 {
-  if (pigs[0].addSpriteComponent(renderer.get(), "data/Textures/duck.png"))
+  for (int i = 0; i < NUM_OF_PIGS; i++)
   {
-    pigs[0].setUpPig(1340, 560);
-    return true;
+    if (pigs[i].addSpriteComponent(renderer.get(), "data/Textures/duck.png"))
+    {
+      pigs[i].setUpPig(pig_positions[i][0], pig_positions[i][1]);
+    }
+    else
+    {
+      ASGE::DebugPrinter() << "Pig Sprite not loaded" << std::endl;
+      return false;
+    }
   }
-  else
-  {
-    ASGE::DebugPrinter() << "Pig Sprite not loaded" << std::endl;
-    return false;
-  }
+  return true;
 }
 
 bool Angry::setupBlocks()
 {
-  float positions[2][NUM_OF_BLOCKS] = { { 1024, 1250, 1250, 1390, 1600 },
-                                        { 760, 690, 620, 690, 760 } };
-  int sizes[2][NUM_OF_BLOCKS] = { { 1, 1, 3, 1, 1 }, { 2, 3, 1, 3, 2 } };
   for (int i = 0; i < NUM_OF_BLOCKS; i++)
   {
-    std::string file = "data/Textures/Wood/" + std::to_string(sizes[0][i]) +
-                       "x" + std::to_string(sizes[1][i]) + ".png";
+    std::string file = "data/Textures/Wood/" +
+                       std::to_string(block_sizes[i][0]) + "x" +
+                       std::to_string(block_sizes[i][1]) + ".png";
     if (blocks[i].addSpriteComponent(renderer.get(), file))
     {
-      blocks[i].setUpBlock(positions[0][i],
-                           positions[1][i],
-                           float(sizes[0][i] * 70),
-                           float(sizes[1][i] * 70));
+      blocks[i].setUpBlock(block_positions[i][0],
+                           block_positions[i][1],
+                           float(block_sizes[i][0] * 70),
+                           float(block_sizes[i][1] * 70));
     }
     else
     {
@@ -174,6 +175,42 @@ void Angry::setupResolution()
   // https://tinyurl.com/y6sqbr78
   game_width = 1920;
   game_height = 1080;
+}
+
+void Angry::restart()
+{
+  game_over = false;
+  game_won = false;
+  score = 0;
+  current_bird = NUM_OF_BIRDS - 1;
+
+  // Reset Birds
+  for (int i = 0; i < NUM_OF_BIRDS; i++)
+  {
+    birds[i].spriteComponent()->getSprite()->xPos(float(i * 60) + 20);
+    birds[i].spriteComponent()->getSprite()->yPos(850);
+    birds[i].released(false);
+    birds[i].physicsComponent()->linearVelocity(vector2(0, 0));
+  }
+  birds[current_bird].spriteComponent()->getSprite()->xPos(250);
+  birds[current_bird].spriteComponent()->getSprite()->yPos(700);
+
+  // Reset Pigs
+  for (int i = 0; i < NUM_OF_PIGS; i++)
+  {
+    pigs[i].spriteComponent()->getSprite()->xPos(pig_positions[i][0]);
+    pigs[i].spriteComponent()->getSprite()->yPos(pig_positions[i][1]);
+    pigs[i].active(true);
+    pigs[i].physicsComponent()->linearVelocity(vector2(0, 0));
+  }
+
+  // Reset Blocks
+  for (int i = 0; i < NUM_OF_BLOCKS; i++)
+  {
+    blocks[i].spriteComponent()->getSprite()->xPos(block_positions[i][0]);
+    blocks[i].spriteComponent()->getSprite()->yPos(block_positions[i][1]);
+    blocks[i].physicsComponent()->linearVelocity(vector2(0, 0));
+  }
 }
 
 /**
@@ -208,9 +245,17 @@ void Angry::keyHandler(const ASGE::SharedEventData data)
     }
   }
 
-  else if (in_menu && key->key == ASGE::KEYS::KEY_SPACE)
+  else if (key->key == ASGE::KEYS::KEY_SPACE &&
+           key->action == ASGE::KEYS::KEY_RELEASED)
   {
-    in_menu = !in_menu;
+    if (in_menu)
+    {
+      in_menu = !in_menu;
+    }
+    else
+    {
+      restart();
+    }
   }
 }
 
@@ -258,8 +303,17 @@ void Angry::update(const ASGE::GameTime& game_time)
   // make sure you use delta time in any movement calculations!
   // auto dt_sec = game_time.delta.count() / 1000.0;
 
-  if (!in_menu)
+  if (!in_menu && !game_won && !game_over)
   {
+    game_won = true;
+    for (int i = 0; i < NUM_OF_PIGS; i++)
+    {
+      if (pigs[i].active())
+      {
+        game_won = false;
+      }
+    }
+
     if (clicked_on_bird)
     {
       moveBirdInCatapult();
@@ -278,13 +332,14 @@ void Angry::update(const ASGE::GameTime& game_time)
 
     for (int i = 0; i < NUM_OF_BIRDS; i++)
     {
-      if (birds[i].released() && birds[i].active())
+      if (birds[i].released())
       {
         birds[i].update(game_time.delta.count() / 1000.0f,
                         blocks,
                         NUM_OF_BLOCKS,
                         pigs,
-                        NUM_OF_PIGS);
+                        NUM_OF_PIGS,
+                        &score);
       }
     }
 
@@ -370,6 +425,9 @@ void Angry::render(const ASGE::GameTime& game_time)
   if (in_menu)
   {
     renderer->renderSprite(*menu_layer.spriteComponent()->getSprite());
+
+    renderer->renderText(
+      "Press SPACE to begin", 825, 900, 1.5f, ASGE::COLOURS::DARKBLUE);
   }
   else
   {
@@ -377,10 +435,7 @@ void Angry::render(const ASGE::GameTime& game_time)
 
     for (int i = 0; i < NUM_OF_BIRDS; i++)
     {
-      if (birds[i].active())
-      {
-        renderer->renderSprite(*birds[i].spriteComponent()->getSprite());
-      }
+      renderer->renderSprite(*birds[i].spriteComponent()->getSprite());
     }
 
     for (int i = 0; i < NUM_OF_BLOCKS; i++)
@@ -394,6 +449,21 @@ void Angry::render(const ASGE::GameTime& game_time)
       {
         renderer->renderSprite(*pigs[i].spriteComponent()->getSprite());
       }
+    }
+
+    std::string score_txt = "Score: " + std::to_string(score);
+    renderer->renderText(score_txt, 860, 50, 1.5f, ASGE::COLOURS::DARKBLUE);
+
+    if (game_won)
+    {
+      renderer->renderText(
+        "Congratulations! You've won!", 740, 525, 1.5f, ASGE::COLOURS::DARKBLUE);
+    }
+    else if (game_over)
+    {
+      renderer->renderText("You Lose", 860, 500, 1.5f, ASGE::COLOURS::DARKBLUE);
+      renderer->renderText(
+        "Press SPACE to restart", 760, 550, 1.5f, ASGE::COLOURS::DARKBLUE);
     }
   }
 }

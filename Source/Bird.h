@@ -20,21 +20,23 @@ class Bird : public GameObject
   Bird() = default;
   ~Bird() override = default;
 
-  void update(
-    double delta_time, Block blocks[], int block_num, Pig pigs[], int pig_num);
+  void update(double delta_time,
+              Block blocks[],
+              int block_num,
+              Pig pigs[],
+              int pig_num,
+              int* score);
   void setUpBird(float x_, float y_);
 
   bool released();
   void released(bool r_);
-  bool active();
-  void active(bool a_);
 
  private:
-  bool collision(Block* blocks, int block_num, Pig* pigs, int pig_num);
+  bool
+  collision(Block* blocks, int block_num, Pig* pigs, int pig_num, int* score);
   Collision collision_detection;
   float friction = 0.25f;
   bool free = false;
-  bool alive = true;
 };
 
 #endif // ANGRYNERDS_BIRD_H

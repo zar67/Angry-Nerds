@@ -20,8 +20,6 @@ class Pig : public GameObject
   void update(double delta_time, Block blocks[], int block_num);
   void setUpPig(float x_, float y_);
 
-  int health();
-  void damage(int hp);
   bool active();
   void active(bool a_);
 
@@ -31,7 +29,6 @@ class Pig : public GameObject
   float friction = 0.25f;
 
   bool alive = true;
-  int strength = 1000;
 };
 
 #endif // ANGRYNERDS_PIG_H

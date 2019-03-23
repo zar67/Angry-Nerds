@@ -39,14 +39,15 @@ vector2 Collision::AABBAABB(Rectangle rect1, Rectangle rect2)
 
 vector2 Collision::AABBCircle(Rectangle rect, Circle circle)
 {
-  float closest_x = fmaxf(rect.x, fminf((circle.x + circle.radius), (rect.x + rect.width)));
+  float closest_x =
+    fmaxf(rect.x, fminf((circle.x + circle.radius), (rect.x + rect.width)));
   float x_diff = (circle.x + circle.radius) - closest_x;
 
-  float closest_y = fmaxf(rect.y, fminf((circle.y + circle.radius), (rect.y + rect.height)));
+  float closest_y =
+    fmaxf(rect.y, fminf((circle.y + circle.radius), (rect.y + rect.height)));
   float y_diff = (circle.y + circle.radius) - closest_y;
 
-  if ((circle.radius * circle.radius) >
-      ((x_diff * x_diff) + (y_diff * y_diff)))
+  if ((circle.radius * circle.radius) > ((x_diff * x_diff) + (y_diff * y_diff)))
   {
     return vector2(closest_x, closest_y);
   }

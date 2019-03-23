@@ -15,7 +15,6 @@ class Collision
   vector2 AABBAABB(Rectangle rect1, Rectangle rect2);
   vector2 AABBCircle(Rectangle rect, Circle circle);
   vector2 CircleCircle(Circle circle1, Circle circle2);
-
 };
 
 #endif // ANGRYNERDS_COLLISION_H
