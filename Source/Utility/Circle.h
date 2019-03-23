@@ -12,9 +12,7 @@ struct Rectangle;
 
 struct Circle
 {
-  // Collision Detection
-  vector2 AABBCollision(Rectangle rectangle);
-  vector2 CircleCollision(Circle circle);
+  bool isInside(float x_, float y_) const;
 
   float x = 0;
   float y = 0;

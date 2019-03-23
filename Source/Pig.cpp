@@ -11,9 +11,6 @@ void Pig::setUpPig(float x_, float y_)
   sprite_component->getSprite()->yPos(y_);
   sprite_component->getSprite()->width(60);
   sprite_component->getSprite()->height(60);
-  shape.x = x_;
-  shape.y = y_;
-  shape.radius = 30;
   speed = 3.5f;
 }
 
@@ -36,11 +33,14 @@ bool Pig::collision(Block* blocks, int block_num)
   // Blocks Collision
   for (int i = 0; i < block_num; i++)
   {
-    vector2 point = blocks[i].getShape().CircleCollision(shape);
+    vector2 point = collision_detection.AABBCircle(
+      blocks[i].spriteComponent()->getBoundingBox(),
+      sprite_component->getBoundingCircle());
 
     if (point.x != 0 || point.y != 0)
     {
-      int side = getCollisionSideRect(point, blocks[i].getShape());
+      int side = getCollisionSideRect(
+        point, blocks[i].spriteComponent()->getBoundingBox());
       if (side != 0)
       {
         // There is a valid collision
@@ -105,15 +105,8 @@ void Pig::update(double delta_time, Block* blocks, int block_num)
   sprite_component->getSprite()->xPos(new_x);
   sprite_component->getSprite()->yPos(new_y);
 
-  shape.x = new_x;
-  shape.y = new_y;
   sprite_component->getSprite()->rotationInRadians((rotation * (3.14f / 180)) *
                                                    float(delta_time));
-}
-
-Circle Pig::getShape()
-{
-  return shape;
 }
 
 int Pig::health()

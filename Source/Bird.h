@@ -6,6 +6,7 @@
 #define ANGRYNERDS_BIRD_H
 
 #include "Block.h"
+#include "Collision.h"
 #include "Components/GameObject.h"
 #include "Pig.h"
 #include "Utility/Circle.h"
@@ -23,8 +24,6 @@ class Bird : public GameObject
     double delta_time, Block blocks[], int block_num, Pig pigs[], int pig_num);
   void setUpBird(float x_, float y_);
 
-  Circle getShape();
-
   bool released();
   void released(bool r_);
   bool active();
@@ -32,7 +31,7 @@ class Bird : public GameObject
 
  private:
   bool collision(Block* blocks, int block_num, Pig* pigs, int pig_num);
-  Circle shape;
+  Collision collision_detection;
   float friction = 0.25f;
   bool free = false;
   bool alive = true;

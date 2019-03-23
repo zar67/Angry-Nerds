@@ -12,10 +12,6 @@ void Block::setUpBlock(float x_, float y_, float w_, float h_)
   sprite_component->getSprite()->yPos(y_);
   sprite_component->getSprite()->width(w_);
   sprite_component->getSprite()->height(h_);
-  shape.x = x_;
-  shape.y = y_;
-  shape.width = w_;
-  shape.height = h_;
   speed = 1.5f;
 }
 
@@ -44,11 +40,14 @@ bool Block::collision(Block* blocks, int block_num)
         blocks[i].spriteComponent()->getSprite()->yPos() !=
           sprite_component->getSprite()->yPos())
     {
-      vector2 point = blocks[i].getShape().AABBCollision(shape);
+      vector2 point = collision_detection.AABBAABB(
+        blocks[i].spriteComponent()->getBoundingBox(),
+        sprite_component->getBoundingBox());
 
       if (point.x != 0 || point.y != 0)
       {
-        int side = getCollisionSideRect(point, blocks[i].getShape());
+        int side = getCollisionSideRect(
+          point, blocks[i].spriteComponent()->getBoundingBox());
         if (side != 0)
         {
           // There is a valid collide
@@ -93,13 +92,7 @@ void Block::update(double delta_time, Block blocks[], int block_num)
 
   sprite_component->getSprite()->xPos(new_x);
   sprite_component->getSprite()->yPos(new_y);
-  shape.x = new_x;
-  shape.y = new_y;
+
   sprite_component->getSprite()->rotationInRadians((rotation * (3.14f / 180)) *
                                                    float(delta_time));
-}
-
-Rectangle Block::getShape()
-{
-  return shape;
 }

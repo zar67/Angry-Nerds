@@ -65,3 +65,13 @@ Rectangle SpriteComponent::getBoundingBox() const
 
   return bounding_box;
 }
+
+Circle SpriteComponent::getBoundingCircle() const
+{
+  Circle bounding_circle;
+  bounding_circle.x = sprite->xPos();
+  bounding_circle.y = sprite->yPos();
+  bounding_circle.radius = sprite->width() / 2;
+
+  return bounding_circle;
+}

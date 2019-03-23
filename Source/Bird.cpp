@@ -3,6 +3,7 @@
 //
 
 #include "Bird.h"
+#include <iostream>
 
 /**
  *   @brief   Sets up the bird object
@@ -18,9 +19,6 @@ void Bird::setUpBird(float x_, float y_)
   sprite_component->getSprite()->yPos(y_);
   sprite_component->getSprite()->width(50);
   sprite_component->getSprite()->height(50);
-  shape.x = x_;
-  shape.y = y_;
-  shape.radius = 25;
   speed = 3.5f;
 }
 /**
@@ -49,10 +47,13 @@ bool Bird::collision(Block* blocks, int block_num, Pig* pigs, int pig_num)
   {
     if (pigs[i].active())
     {
-      vector2 point = pigs[i].getShape().CircleCollision(shape);
+      vector2 point = collision_detection.CircleCircle(
+        sprite_component->getBoundingCircle(),
+        pigs[i].spriteComponent()->getBoundingCircle());
 
       if ((point.x != 0 || point.y != 0) &&
-          getCollisionSideCir(point, shape) != 0)
+          getCollisionSideCir(point, sprite_component->getBoundingCircle()) !=
+            0)
       {
         // Damage Pig
         if (pigs[i].physicsComponent()->linearVelocity().x != 0 ||
@@ -83,11 +84,14 @@ bool Bird::collision(Block* blocks, int block_num, Pig* pigs, int pig_num)
   // Block collision
   for (int i = 0; i < block_num; i++)
   {
-    vector2 point = blocks[i].getShape().CircleCollision(shape);
+    vector2 point = collision_detection.AABBCircle(
+      blocks[i].spriteComponent()->getBoundingBox(),
+      sprite_component->getBoundingCircle());
 
     if (point.x != 0 || point.y != 0)
     {
-      int side = getCollisionSideRect(point, blocks[i].getShape());
+      int side = getCollisionSideRect(
+        point, blocks[i].spriteComponent()->getBoundingBox());
       if (side != 0)
       {
         // There is a valid collision
@@ -138,8 +142,6 @@ void Bird::update(
   sprite_component->getSprite()->xPos(new_x);
   sprite_component->getSprite()->yPos(new_y);
 
-  shape.x = new_x;
-  shape.y = new_y;
   sprite_component->getSprite()->rotationInRadians((rotation * (3.14f / 180)) *
                                                    float(delta_time));
 }
@@ -152,11 +154,6 @@ bool Bird::released()
 void Bird::released(bool r_)
 {
   free = r_;
-}
-
-Circle Bird::getShape()
-{
-  return shape;
 }
 
 bool Bird::active()

@@ -6,6 +6,7 @@
 #define ANGRYNERDS_PIG_H
 
 #include "Block.h"
+#include "Collision.h"
 #include "Components/GameObject.h"
 #include "Utility/Circle.h"
 
@@ -19,8 +20,6 @@ class Pig : public GameObject
   void update(double delta_time, Block blocks[], int block_num);
   void setUpPig(float x_, float y_);
 
-  Circle getShape();
-
   int health();
   void damage(int hp);
   bool active();
@@ -28,8 +27,7 @@ class Pig : public GameObject
 
  private:
   bool collision(Block* blocks, int block_num);
-
-  Circle shape;
+  Collision collision_detection;
   float friction = 0.25f;
 
   bool alive = true;

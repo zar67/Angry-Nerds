@@ -1,4 +1,5 @@
 #pragma once
+#include "Utility/Circle.h"
 #include "Utility/Rectangle.h"
 #include <Engine/Sprite.h>
 /**
@@ -21,6 +22,7 @@ class SpriteComponent
   ASGE::Sprite* getSprite();
 
   Rectangle getBoundingBox() const;
+  Circle getBoundingCircle() const;
 
  private:
   void free();
