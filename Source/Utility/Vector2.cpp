@@ -118,3 +118,8 @@ float vector2::distance(float x_, float y_)
   float y_diff = y - y_;
   return sqrt((x_diff * x_diff) + (y_diff * y_diff));
 }
+
+float vector2::length()
+{
+  return sqrtf((x * x) + (y * y));
+}

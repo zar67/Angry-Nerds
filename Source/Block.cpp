@@ -8,10 +8,10 @@
 void Block::setUpBlock(float x_, float y_, float w_, float h_)
 {
   addPhysicsComponent(vector2(0, 0), 0, 60, w_, h_);
-  spriteComponent()->getSprite()->xPos(x_);
-  spriteComponent()->getSprite()->yPos(y_);
-  spriteComponent()->getSprite()->width(w_);
-  spriteComponent()->getSprite()->height(h_);
+  sprite_component->getSprite()->xPos(x_);
+  sprite_component->getSprite()->yPos(y_);
+  sprite_component->getSprite()->width(w_);
+  sprite_component->getSprite()->height(h_);
   shape.x = x_;
   shape.y = y_;
   shape.width = w_;
@@ -24,13 +24,13 @@ bool Block::collision(Block* blocks, int block_num)
   bool collide = false;
 
   // Ground Collision
-  if (groundCollisionDetection(spriteComponent()->getSprite()->yPos(),
-                               spriteComponent()->getSprite()->height(),
+  if (groundCollisionDetection(sprite_component->getSprite()->yPos(),
+                               sprite_component->getSprite()->height(),
                                physics_component->linearVelocity().y))
   {
     collide = true;
-    spriteComponent()->getSprite()->yPos(
-      900 - spriteComponent()->getSprite()->height());
+    sprite_component->getSprite()->yPos(
+      900 - sprite_component->getSprite()->height());
     physics_component->linearVelocity(
       vector2(physics_component->linearVelocity().x * friction,
               -physics_component->linearVelocity().y * friction));
@@ -40,9 +40,9 @@ bool Block::collision(Block* blocks, int block_num)
   for (int i = 0; i < block_num; i++)
   {
     if (blocks[i].spriteComponent()->getSprite()->xPos() !=
-          spriteComponent()->getSprite()->xPos() &&
+          sprite_component->getSprite()->xPos() &&
         blocks[i].spriteComponent()->getSprite()->yPos() !=
-          spriteComponent()->getSprite()->yPos())
+          sprite_component->getSprite()->yPos())
     {
       vector2 point = blocks[i].getShape().AABBCollision(shape);
 
@@ -55,24 +55,25 @@ bool Block::collision(Block* blocks, int block_num)
           collide = true;
 
           blocks[i].physicsComponent()->linearVelocity(
-            vector2(physicsComponent()->linearVelocity().x,
-                    physicsComponent()->linearVelocity().y));
+            vector2(physics_component->linearVelocity().x,
+                    physics_component->linearVelocity().y));
           // Update velocity based on side hit
           if (side == 1 || side == 2)
           {
             physicsComponent()->linearVelocity(
-              vector2(-physicsComponent()->linearVelocity().x * 0.4f,
-                      physicsComponent()->linearVelocity().y * 0.4f));
+              vector2(-physics_component->linearVelocity().x * 0.4f,
+                      physics_component->linearVelocity().y * 0.4f));
           }
           else if (side == 3 || side == 4)
           {
-            physicsComponent()->linearVelocity(
-              vector2(physicsComponent()->linearVelocity().x * 0.4f,
-                      -physicsComponent()->linearVelocity().y * 0.4f));
+            physics_component->linearVelocity(
+              vector2(physics_component->linearVelocity().x * 0.4f,
+                      -physics_component->linearVelocity().y * 0.4f));
           }
         }
       }
     }
+    physics_component->linearVelocity().normalise();
   }
 
   return collide;
@@ -85,17 +86,17 @@ void Block::update(double delta_time, Block blocks[], int block_num)
   vector2 movement = physics_component->updatePosition(delta_time, collide);
   float rotation = physics_component->updateRotation(delta_time, collide);
 
-  float new_x = spriteComponent()->getSprite()->xPos() +
+  float new_x = sprite_component->getSprite()->xPos() +
                 movement.x * float(delta_time) * speed;
-  float new_y = spriteComponent()->getSprite()->yPos() +
+  float new_y = sprite_component->getSprite()->yPos() +
                 movement.y * float(delta_time) * speed;
 
-  spriteComponent()->getSprite()->xPos(new_x);
-  spriteComponent()->getSprite()->yPos(new_y);
+  sprite_component->getSprite()->xPos(new_x);
+  sprite_component->getSprite()->yPos(new_y);
   shape.x = new_x;
   shape.y = new_y;
-  spriteComponent()->getSprite()->rotationInRadians((rotation * (3.14f / 180)) *
-                                                    float(delta_time));
+  sprite_component->getSprite()->rotationInRadians((rotation * (3.14f / 180)) *
+                                                   float(delta_time));
 }
 
 Rectangle Block::getShape()

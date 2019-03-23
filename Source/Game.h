@@ -32,6 +32,7 @@ class Angry : public ASGE::OGLGame
   bool setupBlocks();
 
   void moveBirdInCatapult();
+  void releaseBird();
 
   virtual void update(const ASGE::GameTime&) override;
   virtual void render(const ASGE::GameTime&) override;
@@ -42,11 +43,17 @@ class Angry : public ASGE::OGLGame
   // Add your GameObjects
   GameObject background_layer;
   GameObject menu_layer;
+
   Bird birds[NUM_OF_BIRDS];
   Block blocks[NUM_OF_BLOCKS];
   Pig pigs[NUM_OF_PIGS];
+
   int current_bird = NUM_OF_BIRDS - 1;
+
+  int score = 0;
+
   bool clicked_on_bird = false;
+  bool release_bird = false;
 
   double mouse_x = 0;
   double mouse_y = 0;

@@ -21,14 +21,20 @@ class Pig : public GameObject
 
   Circle getShape();
 
+  int health();
+  void damage(int hp);
   bool active();
   void active(bool a_);
 
  private:
   bool collision(Block* blocks, int block_num);
+
+
   Circle shape;
   float friction = 0.25f;
+
   bool alive = true;
+  int strength = 1000;
 };
 
 #endif // ANGRYNERDS_PIG_H

@@ -18,6 +18,7 @@ struct vector2
   float crossProduct(vector2 vector);
   float dotProduct(vector2 vector);
   float distance(float x_, float y_);
+  float length();
 
   // data
   float x = 0;

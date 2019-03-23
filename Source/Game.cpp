@@ -240,28 +240,7 @@ void Angry::clickHandler(const ASGE::SharedEventData data)
   else if (current_bird >= 0 && click->action == ASGE::MOUSE::BUTTON_RELEASED &&
            clicked_on_bird)
   {
-    clicked_on_bird = false;
-    // Release bird
-    birds[current_bird].released(true);
-    float x_diff =
-      birds[current_bird].spriteComponent()->getSprite()->xPos() - 250;
-    float y_diff =
-      birds[current_bird].spriteComponent()->getSprite()->yPos() - 700;
-    birds[current_bird].physicsComponent()->linearVelocity(
-      vector2(-x_diff * 1.5f, -y_diff * 3));
-    birds[current_bird].physicsComponent()->linearVelocity().normalise();
-
-    // Set up next bird
-    current_bird--;
-    if (current_bird < 0)
-    {
-      game_over = true;
-    }
-    else
-    {
-      birds[current_bird].spriteComponent()->getSprite()->xPos(250);
-      birds[current_bird].spriteComponent()->getSprite()->yPos(700);
-    }
+    release_bird = true;
   }
 
   ASGE::DebugPrinter() << x_pos << "," << y_pos << std::endl;
@@ -284,6 +263,11 @@ void Angry::update(const ASGE::GameTime& game_time)
     if (clicked_on_bird)
     {
       moveBirdInCatapult();
+    }
+
+    if (release_bird)
+    {
+      releaseBird();
     }
 
     for (int i = 0; i < NUM_OF_BLOCKS; i++)
@@ -312,6 +296,33 @@ void Angry::update(const ASGE::GameTime& game_time)
           game_time.delta.count() / 1000.0f, blocks, NUM_OF_BLOCKS);
       }
     }
+  }
+}
+
+void Angry::releaseBird()
+{
+  clicked_on_bird = false;
+  release_bird = false;
+  // Release bird
+  birds[current_bird].released(true);
+  float x_diff =
+    birds[current_bird].spriteComponent()->getSprite()->xPos() - 250;
+  float y_diff =
+    birds[current_bird].spriteComponent()->getSprite()->yPos() - 700;
+  birds[current_bird].physicsComponent()->linearVelocity(
+    vector2(-x_diff * 1.5f, -y_diff * 3));
+  birds[current_bird].physicsComponent()->linearVelocity().normalise();
+
+  // Set up next bird
+  current_bird--;
+  if (current_bird < 0)
+  {
+    game_over = true;
+  }
+  else
+  {
+    birds[current_bird].spriteComponent()->getSprite()->xPos(250);
+    birds[current_bird].spriteComponent()->getSprite()->yPos(700);
   }
 }
 
@@ -379,7 +390,10 @@ void Angry::render(const ASGE::GameTime& game_time)
 
     for (int i = 0; i < NUM_OF_PIGS; i++)
     {
-      renderer->renderSprite(*pigs[i].spriteComponent()->getSprite());
+      if (pigs[i].active())
+      {
+        renderer->renderSprite(*pigs[i].spriteComponent()->getSprite());
+      }
     }
   }
 }
