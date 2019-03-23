@@ -72,10 +72,10 @@ bool Angry::init()
 
   if (catapult.addSpriteComponent(renderer.get(), "data/Textures/catapult.png"))
   {
-      catapult.spriteComponent()->getSprite()->xPos(170);
-      catapult.spriteComponent()->getSprite()->yPos(680);
-      catapult.spriteComponent()->getSprite()->height(220);
-      catapult.spriteComponent()->getSprite()->width(220);
+    catapult.spriteComponent()->getSprite()->xPos(170);
+    catapult.spriteComponent()->getSprite()->yPos(680);
+    catapult.spriteComponent()->getSprite()->height(220);
+    catapult.spriteComponent()->getSprite()->width(220);
   }
 
   if (!setupBirds())
