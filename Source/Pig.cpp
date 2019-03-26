@@ -6,7 +6,7 @@
 
 void Pig::setUpPig(float x_, float y_)
 {
-  addPhysicsComponent(vector2(0, 0), 0, 60, 50, 50);
+  addPhysicsComponent(vector2(0, 0), 60, 50, 50);
   sprite_component->getSprite()->xPos(x_);
   sprite_component->getSprite()->yPos(y_);
   sprite_component->getSprite()->width(60);
@@ -14,16 +14,13 @@ void Pig::setUpPig(float x_, float y_)
   speed = 3.5f;
 }
 
-bool Pig::collision(Block* blocks, int block_num)
+void Pig::collision(Block* blocks, int block_num)
 {
-  bool collide = false;
-
   // Ground Collision
   if (groundCollisionDetection(sprite_component->getSprite()->yPos(),
                                sprite_component->getSprite()->height(),
                                physics_component->linearVelocity().y))
   {
-    collide = true;
     sprite_component->getSprite()->yPos(850);
     physics_component->linearVelocity(
       vector2(physics_component->linearVelocity().x * friction,
@@ -44,8 +41,6 @@ bool Pig::collision(Block* blocks, int block_num)
       if (side != 0)
       {
         // There is a valid collision
-        collide = true;
-
         blocks[i].physicsComponent()->linearVelocity(
           vector2(physics_component->linearVelocity().x,
                   physics_component->linearVelocity().y));
@@ -67,16 +62,13 @@ bool Pig::collision(Block* blocks, int block_num)
     }
     physics_component->linearVelocity().normalise();
   }
-
-  return collide;
 }
 
 void Pig::update(double delta_time, Block* blocks, int block_num)
 {
-  bool collide = collision(blocks, block_num);
+  collision(blocks, block_num);
 
-  vector2 movement = physics_component->updatePosition(delta_time, collide);
-  float rotation = physics_component->updateRotation(delta_time, collide);
+  vector2 movement = physics_component->updatePosition(delta_time);
 
   float new_x = sprite_component->getSprite()->xPos() +
                 movement.x * float(delta_time) * speed;
@@ -84,9 +76,6 @@ void Pig::update(double delta_time, Block* blocks, int block_num)
                 movement.y * float(delta_time) * speed;
   sprite_component->getSprite()->xPos(new_x);
   sprite_component->getSprite()->yPos(new_y);
-
-  sprite_component->getSprite()->rotationInRadians((rotation * (3.14f / 180)) *
-                                                   float(delta_time));
 }
 
 bool Pig::active()

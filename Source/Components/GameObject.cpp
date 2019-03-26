@@ -75,7 +75,6 @@ SpriteComponent* GameObject::spriteComponent()
  *  @return void
  */
 void GameObject::addPhysicsComponent(vector2 velocity,
-                                     float angular_velocity,
                                      float mass,
                                      float width,
                                      float height)
@@ -83,8 +82,7 @@ void GameObject::addPhysicsComponent(vector2 velocity,
   freePhysics();
 
   physics_component = new PhysicsComponent();
-  physics_component->initPhysics(
-    velocity, angular_velocity, mass, width, height);
+  physics_component->initPhysics(velocity, mass, width, height);
 }
 
 /**

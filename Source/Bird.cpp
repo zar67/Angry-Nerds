@@ -3,7 +3,6 @@
 //
 
 #include "Bird.h"
-#include <iostream>
 
 /**
  *   @brief   Sets up the bird object
@@ -14,7 +13,7 @@
  */
 void Bird::setUpBird(float x_, float y_)
 {
-  addPhysicsComponent(vector2(0, 0), 0, 50, 50, 50);
+  addPhysicsComponent(vector2(0, 0), 50, 50, 50);
   sprite_component->getSprite()->xPos(x_);
   sprite_component->getSprite()->yPos(y_);
   sprite_component->getSprite()->width(50);
@@ -26,17 +25,14 @@ void Bird::setUpBird(float x_, float y_)
  *   @details Detects collision against the ground, pigs and blocks
  *   @return  Bool stating whether a collision has happened
  */
-bool Bird::collision(
+void Bird::collision(
   Block* blocks, int block_num, Pig* pigs, int pig_num, int* score)
 {
-  bool collide = false;
-
   // Ground Collision
   if (groundCollisionDetection(sprite_component->getSprite()->yPos(),
                                sprite_component->getSprite()->height(),
                                physics_component->linearVelocity().y))
   {
-    collide = true;
     spriteComponent()->getSprite()->yPos(850);
     physics_component->linearVelocity(
       vector2(physics_component->linearVelocity().x * friction,
@@ -84,7 +80,6 @@ bool Bird::collision(
       if (side != 0)
       {
         // There is a valid collision
-        collide = true;
         *score += 10;
 
         blocks[i].physicsComponent()->linearVelocity(
@@ -107,7 +102,6 @@ bool Bird::collision(
     }
     physics_component->linearVelocity().normalise();
   }
-  return collide;
 }
 
 /**
@@ -123,10 +117,9 @@ void Bird::update(double delta_time,
                   int pig_num,
                   int* score)
 {
-  bool collide = collision(blocks, block_num, pigs, pig_num, score);
+  collision(blocks, block_num, pigs, pig_num, score);
 
-  vector2 movement = physics_component->updatePosition(delta_time, collide);
-  float rotation = physics_component->updateRotation(delta_time, collide);
+  vector2 movement = physics_component->updatePosition(delta_time);
 
   float new_x = sprite_component->getSprite()->xPos() +
                 movement.x * float(delta_time) * speed;
@@ -134,9 +127,6 @@ void Bird::update(double delta_time,
                 movement.y * float(delta_time) * speed;
   sprite_component->getSprite()->xPos(new_x);
   sprite_component->getSprite()->yPos(new_y);
-
-  sprite_component->getSprite()->rotationInRadians((rotation * (3.14f / 180)) *
-                                                   float(delta_time));
 }
 
 bool Bird::released()

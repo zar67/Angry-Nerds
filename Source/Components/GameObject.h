@@ -21,8 +21,7 @@ class GameObject
                           const std::string& texture_file_name);
   SpriteComponent* spriteComponent();
 
-  void
-  addPhysicsComponent(vector2 v, float a, float m, float width, float height);
+  void addPhysicsComponent(vector2 v, float m, float width, float height);
   PhysicsComponent* physicsComponent();
 
   vector2 position();

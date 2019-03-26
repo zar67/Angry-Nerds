@@ -32,7 +32,7 @@ class Bird : public GameObject
   void released(bool r_);
 
  private:
-  bool
+  void
   collision(Block* blocks, int block_num, Pig* pigs, int pig_num, int* score);
   Collision collision_detection;
   float friction = 0.25f;

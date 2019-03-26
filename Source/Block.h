@@ -22,7 +22,7 @@ class Block : public GameObject
   void setUpBlock(float x_, float y_, float w_, float h_);
 
  private:
-  bool collision(Block* blocks, int block_num);
+  void collision(Block* blocks, int block_num);
   Collision collision_detection;
   float friction = 0.1f;
 };

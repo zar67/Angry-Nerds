@@ -3,11 +3,10 @@
 //
 
 #include "Block.h"
-#include <iostream>
 
 void Block::setUpBlock(float x_, float y_, float w_, float h_)
 {
-  addPhysicsComponent(vector2(0, 0), 0, 60, w_, h_);
+  addPhysicsComponent(vector2(0, 0), 60, w_, h_);
   sprite_component->getSprite()->xPos(x_);
   sprite_component->getSprite()->yPos(y_);
   sprite_component->getSprite()->width(w_);
@@ -15,16 +14,13 @@ void Block::setUpBlock(float x_, float y_, float w_, float h_)
   speed = 1.5f;
 }
 
-bool Block::collision(Block* blocks, int block_num)
+void Block::collision(Block* blocks, int block_num)
 {
-  bool collide = false;
-
   // Ground Collision
   if (groundCollisionDetection(sprite_component->getSprite()->yPos(),
                                sprite_component->getSprite()->height(),
                                physics_component->linearVelocity().y))
   {
-    collide = true;
     sprite_component->getSprite()->yPos(
       900 - sprite_component->getSprite()->height());
     physics_component->linearVelocity(
@@ -51,8 +47,6 @@ bool Block::collision(Block* blocks, int block_num)
         if (side != 0)
         {
           // There is a valid collide
-          collide = true;
-
           blocks[i].physicsComponent()->linearVelocity(
             vector2(physics_component->linearVelocity().x,
                     physics_component->linearVelocity().y));
@@ -74,16 +68,13 @@ bool Block::collision(Block* blocks, int block_num)
     }
     physics_component->linearVelocity().normalise();
   }
-
-  return collide;
 }
 
 void Block::update(double delta_time, Block blocks[], int block_num)
 {
-  bool collide = collision(blocks, block_num);
+  collision(blocks, block_num);
 
-  vector2 movement = physics_component->updatePosition(delta_time, collide);
-  float rotation = physics_component->updateRotation(delta_time, collide);
+  vector2 movement = physics_component->updatePosition(delta_time);
 
   float new_x = sprite_component->getSprite()->xPos() +
                 movement.x * float(delta_time) * speed;
@@ -92,7 +83,4 @@ void Block::update(double delta_time, Block blocks[], int block_num)
 
   sprite_component->getSprite()->xPos(new_x);
   sprite_component->getSprite()->yPos(new_y);
-
-  sprite_component->getSprite()->rotationInRadians((rotation * (3.14f / 180)) *
-                                                   float(delta_time));
 }
