@@ -6,7 +6,7 @@
 
 void Pig::setUpPig(float x_, float y_)
 {
-  addPhysicsComponent(vector2(0, 0), 60, 50, 50);
+  addPhysicsComponent(vector2(0, 0), 50, 50);
   sprite_component->getSprite()->xPos(x_);
   sprite_component->getSprite()->yPos(y_);
   sprite_component->getSprite()->width(60);
@@ -68,7 +68,7 @@ void Pig::update(double delta_time, Block* blocks, int block_num)
 {
   collision(blocks, block_num);
 
-  vector2 movement = physics_component->updatePosition(delta_time);
+  vector2 movement = physics_component->getMovement(delta_time);
 
   float new_x = sprite_component->getSprite()->xPos() +
                 movement.x * float(delta_time) * speed;
