@@ -101,6 +101,15 @@ void Bird::collision(
           physics_component->linearVelocity(
             vector2(physics_component->linearVelocity().x * 0.4f,
                     -physics_component->linearVelocity().y * 0.4f));
+
+          if (side == 3 && sprite_component->getSprite()->yPos() +
+                               spriteComponent()->getSprite()->height() >
+                             blocks[i].spriteComponent()->getSprite()->yPos())
+          {
+            sprite_component->getSprite()->yPos(
+              blocks[i].spriteComponent()->getSprite()->yPos() -
+              sprite_component->getSprite()->height());
+          }
         }
       }
     }
