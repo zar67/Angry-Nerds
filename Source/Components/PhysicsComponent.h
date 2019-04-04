@@ -15,8 +15,8 @@ class PhysicsComponent
   void initPhysics(vector2 velocity, float w_, float h_);
   vector2 getMovement(double delta_time);
 
-  vector2 linearVelocity() { return linear_velocity; }
-  void linearVelocity(vector2 v) { linear_velocity = v; }
+  vector2 linearVelocity();
+  void linearVelocity(vector2 v);
 
  private:
   float gravity = 9.81f;

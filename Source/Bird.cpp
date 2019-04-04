@@ -80,7 +80,11 @@ void Bird::collision(
       if (side != 0)
       {
         // There is a valid collision
-        *score += 10;
+        if (physics_component->linearVelocity().x > 0.02f &&
+            physics_component->linearVelocity().y > 0.02f)
+        {
+          *score += 10;
+        }
 
         blocks[i].physicsComponent()->linearVelocity(
           vector2(physics_component->linearVelocity().x * 2,

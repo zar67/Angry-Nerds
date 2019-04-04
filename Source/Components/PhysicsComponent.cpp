@@ -32,3 +32,13 @@ vector2 PhysicsComponent::getMovement(double delta_time)
 
   return vector2(linear_velocity.x, linear_velocity.y);
 }
+
+vector2 PhysicsComponent::linearVelocity()
+{
+  return linear_velocity;
+}
+
+void PhysicsComponent::linearVelocity(vector2 v)
+{
+  linear_velocity = v;
+}
