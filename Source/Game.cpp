@@ -1,3 +1,4 @@
+#include <iostream>
 #include <string>
 
 #include "Game.h"
@@ -57,6 +58,12 @@ bool Angry::init()
   mouse_callback_id =
     inputs->addCallbackFnc(ASGE::E_MOUSE_CLICK, &Angry::clickHandler, this);
 
+  if (!level.load("GameData/LevelData/lvl_one.txt"))
+  {
+    ASGE::DebugPrinter() << "Level not loaded" << std::endl;
+    return false;
+  }
+
   if (!loadBackgrounds())
   {
     ASGE::DebugPrinter() << "Background not loaded" << std::endl;
@@ -82,6 +89,7 @@ bool Angry::init()
   {
     return false;
   }
+  current_bird = level.bird_num - 1;
   birds[current_bird].spriteComponent()->getSprite()->xPos(250);
   birds[current_bird].spriteComponent()->getSprite()->yPos(700);
 
@@ -109,7 +117,7 @@ bool Angry::loadBackgrounds()
 
 bool Angry::setupBirds()
 {
-  for (int i = 0; i < NUM_OF_BIRDS; i++)
+  for (int i = 0; i < level.bird_num; i++)
   {
     if (birds[i].addSpriteComponent(renderer.get(), "data/Textures/parrot.png"))
     {
@@ -126,11 +134,11 @@ bool Angry::setupBirds()
 
 bool Angry::setupPigs()
 {
-  for (int i = 0; i < NUM_OF_PIGS; i++)
+  for (int i = 0; i < level.pig_num; i++)
   {
     if (pigs[i].addSpriteComponent(renderer.get(), "data/Textures/duck.png"))
     {
-      pigs[i].setUpPig(pig_positions[i][0], pig_positions[i][1]);
+      pigs[i].setUpPig(level.pig_positions[i][0], level.pig_positions[i][1]);
     }
     else
     {
@@ -143,17 +151,17 @@ bool Angry::setupPigs()
 
 bool Angry::setupBlocks()
 {
-  for (int i = 0; i < NUM_OF_BLOCKS; i++)
+  for (int i = 0; i < level.block_num; i++)
   {
     std::string file = "data/Textures/Wood/" +
-                       std::to_string(block_sizes[i][0]) + "x" +
-                       std::to_string(block_sizes[i][1]) + ".png";
+                       std::to_string(level.block_sizes[i][0]) + "x" +
+                       std::to_string(level.block_sizes[i][1]) + ".png";
     if (blocks[i].addSpriteComponent(renderer.get(), file))
     {
-      blocks[i].setUpBlock(block_positions[i][0],
-                           block_positions[i][1],
-                           float(block_sizes[i][0] * 70),
-                           float(block_sizes[i][1] * 70));
+      blocks[i].setUpBlock(level.block_positions[i][0],
+                           level.block_positions[i][1],
+                           float(level.block_sizes[i][0] * 70),
+                           float(level.block_sizes[i][1] * 70));
     }
     else
     {
@@ -190,10 +198,10 @@ void Angry::restart()
   birds_used = false;
   stop_timer = 0;
   score = 0;
-  current_bird = NUM_OF_BIRDS - 1;
+  current_bird = level.bird_num - 1;
 
   // Reset Birds
-  for (int i = 0; i < NUM_OF_BIRDS; i++)
+  for (int i = 0; i < level.bird_num; i++)
   {
     birds[i].spriteComponent()->getSprite()->xPos(float(i * 60) + 20);
     birds[i].spriteComponent()->getSprite()->yPos(850);
@@ -204,19 +212,19 @@ void Angry::restart()
   birds[current_bird].spriteComponent()->getSprite()->yPos(700);
 
   // Reset Pigs
-  for (int i = 0; i < NUM_OF_PIGS; i++)
+  for (int i = 0; i < level.pig_num; i++)
   {
-    pigs[i].spriteComponent()->getSprite()->xPos(pig_positions[i][0]);
-    pigs[i].spriteComponent()->getSprite()->yPos(pig_positions[i][1]);
+    pigs[i].spriteComponent()->getSprite()->xPos(level.pig_positions[i][0]);
+    pigs[i].spriteComponent()->getSprite()->yPos(level.pig_positions[i][1]);
     pigs[i].active(true);
     pigs[i].physicsComponent()->linearVelocity(vector2(0, 0));
   }
 
   // Reset Blocks
-  for (int i = 0; i < NUM_OF_BLOCKS; i++)
+  for (int i = 0; i < level.block_num; i++)
   {
-    blocks[i].spriteComponent()->getSprite()->xPos(block_positions[i][0]);
-    blocks[i].spriteComponent()->getSprite()->yPos(block_positions[i][1]);
+    blocks[i].spriteComponent()->getSprite()->xPos(level.block_positions[i][0]);
+    blocks[i].spriteComponent()->getSprite()->yPos(level.block_positions[i][1]);
     blocks[i].physicsComponent()->linearVelocity(vector2(0, 0));
   }
 }
@@ -314,7 +322,7 @@ void Angry::update(const ASGE::GameTime& game_time)
   if (!in_menu && !game_won && !game_over)
   {
     game_won = true;
-    for (int i = 0; i < NUM_OF_PIGS; i++)
+    for (int i = 0; i < level.pig_num; i++)
     {
       if (pigs[i].active())
       {
@@ -341,31 +349,31 @@ void Angry::update(const ASGE::GameTime& game_time)
       releaseBird();
     }
 
-    for (int i = 0; i < NUM_OF_BLOCKS; i++)
+    for (int i = 0; i < level.block_num; i++)
     {
       blocks[i].update(
-        game_time.delta.count() / 1000.0f, blocks, NUM_OF_BLOCKS);
+        game_time.delta.count() / 1000.0f, blocks, level.block_num);
     }
 
-    for (int i = 0; i < NUM_OF_BIRDS; i++)
+    for (int i = 0; i < level.bird_num; i++)
     {
       if (birds[i].released())
       {
         birds[i].update(game_time.delta.count() / 1000.0f,
                         blocks,
-                        NUM_OF_BLOCKS,
+                        level.block_num,
                         pigs,
-                        NUM_OF_PIGS,
+                        level.pig_num,
                         &score);
       }
     }
 
-    for (int i = 0; i < NUM_OF_PIGS; i++)
+    for (int i = 0; i < level.pig_num; i++)
     {
       if (pigs[i].active())
       {
         pigs[i].update(
-          game_time.delta.count() / 1000.0f, blocks, NUM_OF_BLOCKS);
+          game_time.delta.count() / 1000.0f, blocks, level.block_num);
       }
     }
   }
@@ -450,19 +458,19 @@ void Angry::render(const ASGE::GameTime& game_time)
   {
     renderer->renderSprite(*background_layer.spriteComponent()->getSprite());
 
-    for (int i = 0; i < NUM_OF_BIRDS; i++)
+    for (int i = 0; i < level.bird_num; i++)
     {
       renderer->renderSprite(*birds[i].spriteComponent()->getSprite());
     }
 
     renderer->renderSprite(*catapult.spriteComponent()->getSprite());
 
-    for (int i = 0; i < NUM_OF_BLOCKS; i++)
+    for (int i = 0; i < level.block_num; i++)
     {
       renderer->renderSprite(*blocks[i].spriteComponent()->getSprite());
     }
 
-    for (int i = 0; i < NUM_OF_PIGS; i++)
+    for (int i = 0; i < level.pig_num; i++)
     {
       if (pigs[i].active())
       {
