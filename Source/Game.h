@@ -8,8 +8,11 @@
 #include "Components/GameObject.h"
 #include "Level.h"
 #include "Pig.h"
+//#include "Utility/Rectangle.h"
 
-const int NUM_OF_LEVELS = 2;
+// const int NUM_OF_BIRDS = 4;
+// const int NUM_OF_BLOCKS = 5;
+// const int NUM_OF_PIGS = 2;
 
 /**
  *  An OpenGL Game based on ASGE.
@@ -25,10 +28,7 @@ class Angry : public ASGE::OGLGame
   void keyHandler(const ASGE::SharedEventData data);
   void clickHandler(const ASGE::SharedEventData data);
   void setupResolution();
-
-  bool loadBackground();
-  bool changeBackground();
-
+  bool loadBackgrounds();
   bool setupBirds();
   bool setupPigs();
   bool setupBlocks();
@@ -50,7 +50,6 @@ class Angry : public ASGE::OGLGame
   GameObject catapult;
 
   Level level;
-  int current_level = 1;
 
   Bird birds[MAX_BIRD_NUM];
   Block blocks[MAX_BLOCK_NUM];

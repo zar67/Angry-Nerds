@@ -55,6 +55,10 @@ void Bird::collision(
         pigs[i].active(false);
         *score += 100;
 
+        pigs[i].physicsComponent()->linearVelocity(
+          vector2(physics_component->linearVelocity().x,
+                  physics_component->linearVelocity().y));
+
         physics_component->linearVelocity(
           vector2(-physics_component->linearVelocity().x * 0.4f,
                   -physics_component->linearVelocity().y * 0.4f));

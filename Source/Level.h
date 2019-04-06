@@ -13,8 +13,6 @@ const int MAX_BLOCK_NUM = 20;
 
 struct Level
 {
-  Level() = default;
-
   bool load(std::string file_name);
 
   int bird_num = 0;
