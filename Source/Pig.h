@@ -17,17 +17,12 @@ class Pig : public GameObject
  public:
   Pig() = default;
   ~Pig() override = default;
-  void update(double delta_time, Block blocks[], int block_num);
   void setUpPig(float x_, float y_);
 
   bool active();
   void active(bool a_);
 
  private:
-  void collision(Block* blocks, int block_num);
-  Collision collision_detection;
-  float friction = 0.25f;
-
   bool alive = true;
 };
 

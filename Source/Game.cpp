@@ -1,4 +1,3 @@
-#include <iostream>
 #include <string>
 
 #include "Game.h"
@@ -58,13 +57,13 @@ bool Angry::init()
   mouse_callback_id =
     inputs->addCallbackFnc(ASGE::E_MOUSE_CLICK, &Angry::clickHandler, this);
 
-  if (!level.load("GameData/LevelData/lvl_one.txt"))
+  if (!level.load("GameData/LevelData/lvl_1.txt"))
   {
     ASGE::DebugPrinter() << "Level not loaded" << std::endl;
     return false;
   }
 
-  if (!loadBackgrounds())
+  if (!loadBackground())
   {
     ASGE::DebugPrinter() << "Background not loaded" << std::endl;
     return false;
@@ -106,13 +105,20 @@ bool Angry::init()
   return true;
 }
 
-bool Angry::loadBackgrounds()
+bool Angry::loadBackground()
+{
+  return background_layer.addSpriteComponent(renderer.get(),
+                                             "data/Textures/Backdrops/"
+                                             "lvl1.png");
+}
+
+bool Angry::changeBackground()
 {
   std::string filename = "data/Textures/Backdrops/lvl";
-  filename += std::to_string(std::rand() % 3 + 1);
+  filename += std::to_string(current_level);
   filename += ".png";
-
-  return background_layer.addSpriteComponent(renderer.get(), filename);
+  return background_layer.spriteComponent()->loadSprite(renderer.get(),
+                                                        filename);
 }
 
 bool Angry::setupBirds()
@@ -214,10 +220,7 @@ void Angry::restart()
   // Reset Pigs
   for (int i = 0; i < level.pig_num; i++)
   {
-    pigs[i].spriteComponent()->getSprite()->xPos(level.pig_positions[i][0]);
-    pigs[i].spriteComponent()->getSprite()->yPos(level.pig_positions[i][1]);
     pigs[i].active(true);
-    pigs[i].physicsComponent()->linearVelocity(vector2(0, 0));
   }
 
   // Reset Blocks
@@ -270,6 +273,23 @@ void Angry::keyHandler(const ASGE::SharedEventData data)
     }
     else
     {
+      if (game_won)
+      {
+        if (current_level == NUM_OF_LEVELS)
+        {
+          in_menu = true;
+          current_level = 1;
+        }
+        else
+        {
+          current_level++;
+          changeBackground();
+          std::string filename = "GameData/LevelData/lvl_";
+          filename += std::to_string(current_level);
+          filename += ".txt";
+          level.load(filename);
+        }
+      }
       restart();
     }
   }
@@ -303,8 +323,6 @@ void Angry::clickHandler(const ASGE::SharedEventData data)
   {
     release_bird = true;
   }
-
-  ASGE::DebugPrinter() << x_pos << "," << y_pos << std::endl;
 }
 
 /**
@@ -365,15 +383,6 @@ void Angry::update(const ASGE::GameTime& game_time)
                         pigs,
                         level.pig_num,
                         &score);
-      }
-    }
-
-    for (int i = 0; i < level.pig_num; i++)
-    {
-      if (pigs[i].active())
-      {
-        pigs[i].update(
-          game_time.delta.count() / 1000.0f, blocks, level.block_num);
       }
     }
   }
@@ -483,14 +492,35 @@ void Angry::render(const ASGE::GameTime& game_time)
 
     if (game_won)
     {
-      renderer->renderText(
-        "Congratulations! You've won!", 740, 525, 1.5f, ASGE::COLOURS::DARKBLUE);
+      if (current_level == NUM_OF_LEVELS)
+      {
+        renderer->renderText("Congratulations! You've won!",
+                             740,
+                             125,
+                             1.5f,
+                             ASGE::COLOURS::DARKBLUE);
+        renderer->renderText("Press SPACE to return to the menu",
+                             710,
+                             150,
+                             1.5f,
+                             ASGE::COLOURS::DARKBLUE);
+      }
+      else
+      {
+        renderer->renderText("Congratulations! You've completed the level!",
+                             700,
+                             125,
+                             1.5f,
+                             ASGE::COLOURS::DARKBLUE);
+        renderer->renderText(
+          "Press SPACE to continue", 760, 150, 1.5f, ASGE::COLOURS::DARKBLUE);
+      }
     }
     else if (game_over)
     {
-      renderer->renderText("You Lose", 860, 500, 1.5f, ASGE::COLOURS::DARKBLUE);
+      renderer->renderText("You Lose", 860, 125, 1.5f, ASGE::COLOURS::DARKBLUE);
       renderer->renderText(
-        "Press SPACE to restart", 760, 550, 1.5f, ASGE::COLOURS::DARKBLUE);
+        "Press SPACE to restart", 760, 150, 1.5f, ASGE::COLOURS::DARKBLUE);
     }
   }
 }
