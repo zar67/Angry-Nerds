@@ -58,7 +58,7 @@ bool Angry::init()
   mouse_callback_id =
     inputs->addCallbackFnc(ASGE::E_MOUSE_CLICK, &Angry::clickHandler, this);
 
-  if (!level.load("GameData/LevelData/lvl_1.txt"))
+  if (!level.load("../../GameData/LevelData/lvl_1.txt"))
   {
     ASGE::DebugPrinter() << "Level not loaded" << std::endl;
     return false;
@@ -294,7 +294,7 @@ void Angry::keyHandler(const ASGE::SharedEventData data)
         {
           current_level++;
           changeBackground();
-          std::string filename = "GameData/LevelData/lvl_";
+          std::string filename = "../../GameData/LevelData/lvl_";
           filename += std::to_string(current_level);
           filename += ".txt";
 
