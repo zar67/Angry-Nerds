@@ -161,9 +161,10 @@ bool Angry::setupBlocks()
 {
   for (int i = 0; i < MAX_BLOCK_NUM; i++)
   {
-    if (blocks[i].addSpriteComponent(renderer.get(), "data/Textures/Wood/1x1.png"))
+    if (blocks[i].addSpriteComponent(renderer.get(),
+                                     "data/Textures/Wood/1x1.png"))
     {
-      blocks[i].setUpBlock(0,0,70,70);
+      blocks[i].setUpBlock(0, 0, 70, 70);
     }
     else
     {
@@ -226,15 +227,16 @@ void Angry::restart()
   for (int i = 0; i < level.block_num; i++)
   {
     std::string filename = "data/Textures/Wood/";
-    filename += std::to_string(level.block_sizes[i][0]) + "x" + std::to_string(level.block_sizes[i][1]) + ".png";
+    filename += std::to_string(level.block_sizes[i][0]) + "x" +
+                std::to_string(level.block_sizes[i][1]) + ".png";
     blocks[i].spriteComponent()->loadSprite(renderer.get(), filename);
 
     blocks[i].spriteComponent()->getSprite()->xPos(level.block_positions[i][0]);
     blocks[i].spriteComponent()->getSprite()->yPos(level.block_positions[i][1]);
     blocks[i].spriteComponent()->getSprite()->width(
-            static_cast<float>(level.block_sizes[i][0]) * 70.0f);
+      static_cast<float>(level.block_sizes[i][0]) * 70.0f);
     blocks[i].spriteComponent()->getSprite()->height(
-            static_cast<float>(level.block_sizes[i][1]) * 70.0f);
+      static_cast<float>(level.block_sizes[i][1]) * 70.0f);
 
     blocks[i].physicsComponent()->linearVelocity(vector2(0, 0));
   }
@@ -298,7 +300,7 @@ void Angry::keyHandler(const ASGE::SharedEventData data)
 
           if (!level.load(filename))
           {
-             ASGE::DebugPrinter() << "Next level not loaded" << std::endl;
+            ASGE::DebugPrinter() << "Next level not loaded" << std::endl;
           }
         }
       }

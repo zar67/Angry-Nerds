@@ -154,10 +154,10 @@ bool GameObject::groundCollisionDetection(float y, float height, float dir_y)
 
 bool GameObject::active()
 {
-    return alive;
+  return alive;
 }
 
 void GameObject::active(bool a_)
 {
-    alive = a_;
+  alive = a_;
 }
