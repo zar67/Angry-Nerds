@@ -77,13 +77,3 @@ void Pig::update(double delta_time, Block* blocks, int block_num)
   sprite_component->getSprite()->xPos(new_x);
   sprite_component->getSprite()->yPos(new_y);
 }
-
-bool Pig::active()
-{
-  return alive;
-}
-
-void Pig::active(bool a_)
-{
-  alive = a_;
-}

@@ -9,7 +9,7 @@
 #include "Level.h"
 #include "Pig.h"
 
-const int NUM_OF_LEVELS = 1;
+const int NUM_OF_LEVELS = 2;
 
 /**
  *  An OpenGL Game based on ASGE.

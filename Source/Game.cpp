@@ -89,7 +89,6 @@ bool Angry::init()
   {
     return false;
   }
-  current_bird = level.bird_num - 1;
   birds[current_bird].spriteComponent()->getSprite()->xPos(250);
   birds[current_bird].spriteComponent()->getSprite()->yPos(700);
 
@@ -102,6 +101,8 @@ bool Angry::init()
   {
     return false;
   }
+
+  restart();
 
   return true;
 }
@@ -124,11 +125,11 @@ bool Angry::changeBackground()
 
 bool Angry::setupBirds()
 {
-  for (int i = 0; i < level.bird_num; i++)
+  for (int i = 0; i < MAX_BIRD_NUM; i++)
   {
     if (birds[i].addSpriteComponent(renderer.get(), "data/Textures/parrot.png"))
     {
-      birds[i].setUpBird(float(i * 60) + 20, 850);
+      birds[i].setUpBird(0, 0);
     }
     else
     {
@@ -141,11 +142,11 @@ bool Angry::setupBirds()
 
 bool Angry::setupPigs()
 {
-  for (int i = 0; i < level.pig_num; i++)
+  for (int i = 0; i < MAX_PIG_NUM; i++)
   {
     if (pigs[i].addSpriteComponent(renderer.get(), "data/Textures/duck.png"))
     {
-      pigs[i].setUpPig(level.pig_positions[i][0], level.pig_positions[i][1]);
+      pigs[i].setUpPig(0, 0);
     }
     else
     {
@@ -158,17 +159,11 @@ bool Angry::setupPigs()
 
 bool Angry::setupBlocks()
 {
-  for (int i = 0; i < level.block_num; i++)
+  for (int i = 0; i < MAX_BLOCK_NUM; i++)
   {
-    std::string file = "data/Textures/Wood/" +
-                       std::to_string(level.block_sizes[i][0]) + "x" +
-                       std::to_string(level.block_sizes[i][1]) + ".png";
-    if (blocks[i].addSpriteComponent(renderer.get(), file))
+    if (blocks[i].addSpriteComponent(renderer.get(), "data/Textures/Wood/1x1.png"))
     {
-      blocks[i].setUpBlock(level.block_positions[i][0],
-                           level.block_positions[i][1],
-                           float(level.block_sizes[i][0] * 70),
-                           float(level.block_sizes[i][1] * 70));
+      blocks[i].setUpBlock(0,0,70,70);
     }
     else
     {
@@ -230,8 +225,17 @@ void Angry::restart()
   // Reset Blocks
   for (int i = 0; i < level.block_num; i++)
   {
+    std::string filename = "data/Textures/Wood/";
+    filename += std::to_string(level.block_sizes[i][0]) + "x" + std::to_string(level.block_sizes[i][1]) + ".png";
+    blocks[i].spriteComponent()->loadSprite(renderer.get(), filename);
+
     blocks[i].spriteComponent()->getSprite()->xPos(level.block_positions[i][0]);
     blocks[i].spriteComponent()->getSprite()->yPos(level.block_positions[i][1]);
+    blocks[i].spriteComponent()->getSprite()->width(
+            static_cast<float>(level.block_sizes[i][0]) * 70.0f);
+    blocks[i].spriteComponent()->getSprite()->height(
+            static_cast<float>(level.block_sizes[i][1]) * 70.0f);
+
     blocks[i].physicsComponent()->linearVelocity(vector2(0, 0));
   }
 }
@@ -291,9 +295,14 @@ void Angry::keyHandler(const ASGE::SharedEventData data)
           std::string filename = "GameData/LevelData/lvl_";
           filename += std::to_string(current_level);
           filename += ".txt";
-          level.load(filename);
+
+          if (!level.load(filename))
+          {
+             ASGE::DebugPrinter() << "Next level not loaded" << std::endl;
+          }
         }
       }
+
       restart();
     }
   }

@@ -151,3 +151,13 @@ bool GameObject::groundCollisionDetection(float y, float height, float dir_y)
 {
   return y > 900 - height && dir_y >= 0;
 }
+
+bool GameObject::active()
+{
+    return alive;
+}
+
+void GameObject::active(bool a_)
+{
+    alive = a_;
+}

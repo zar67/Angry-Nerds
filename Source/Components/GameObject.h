@@ -24,6 +24,9 @@ class GameObject
   void addPhysicsComponent(vector2 v, float width, float height);
   PhysicsComponent* physicsComponent();
 
+  bool active();
+  void active(bool a_);
+
   vector2 position();
   bool groundCollisionDetection(float y, float height, float dir_y);
 
@@ -36,4 +39,5 @@ class GameObject
   PhysicsComponent* physics_component = nullptr;
 
   float speed = 0;
+  bool alive = true;
 };
