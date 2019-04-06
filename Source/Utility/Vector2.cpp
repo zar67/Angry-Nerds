@@ -20,6 +20,41 @@ vector2::vector2(const vector2& rhs)
 }
 
 /**
+ *   @brief   Resets the vector
+ *   @details Will set the x and y values to the values given by the parameters
+ *   @return  void
+ */
+void vector2::setAs(float x_, float y_)
+{
+  x = x_;
+  y = y_;
+}
+
+/**
+ *   @brief   Increases the vector
+ *   @details Will increase the x and y values by the values given by the
+ * parameters
+ *   @return  void
+ */
+void vector2::increaseBy(float x_, float y_)
+{
+  x += x_;
+  y += y_;
+}
+
+/**
+ *   @brief   Scales the vector
+ *   @details Will scale the x and y values by the values given by the
+ * parameters
+ *   @return  void
+ */
+void vector2::multiplyBy(float x_, float y_)
+{
+  x *= x_;
+  y *= y_;
+}
+
+/**
  *   @brief   Copies a vector.
  *   @details Updates vector2 from an existing.
  *   @return  void
@@ -59,4 +94,32 @@ vector2 vector2::operator*(float scalar)
   vec.x *= scalar;
   vec.y *= scalar;
   return vec;
+}
+
+/**
+ *   @brief   Cross Product
+ *   @details Will get the scalar cross product of this vector and the one given
+ * in the parameter
+ *   @return  The scalar
+ */
+float vector2::crossProduct(vector2 vector)
+{
+  return (x * vector.y) - (y * vector.x);
+}
+
+float vector2::dotProduct(vector2 vector)
+{
+  return (x * vector.x) + (y * vector.y);
+}
+
+float vector2::distance(float x_, float y_)
+{
+  float x_diff = x - x_;
+  float y_diff = y - y_;
+  return sqrt((x_diff * x_diff) + (y_diff * y_diff));
+}
+
+float vector2::length()
+{
+  return sqrtf((x * x) + (y * y));
 }

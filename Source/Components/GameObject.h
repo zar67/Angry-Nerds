@@ -1,4 +1,5 @@
 #pragma once
+#include "PhysicsComponent.h"
 #include "SpriteComponent.h"
 #include "Utility/Vector2.h"
 #include <string>
@@ -13,37 +14,30 @@
 class GameObject
 {
  public:
-  /**
-   *  Default constructor.
-   */
   GameObject() = default;
+  virtual ~GameObject();
 
-  /**
-   *  Destructor. Frees dynamic memory.
-   */
-  ~GameObject();
-
-  /**
-   *  Allocates and attaches a sprite component to the object.
-   *  Part of this process will attempt to load a texture file.
-   *  If this fails this function will return false and the memory
-   *  allocated, freed.
-   *  @param [in] renderer The renderer used to perform the allocations
-   *  @param [in] texture_file_name The file path to the the texture to load
-   *  @return true if the component is successfully added
-   */
   bool addSpriteComponent(ASGE::Renderer* renderer,
                           const std::string& texture_file_name);
-
-  /**
-   *  Returns the sprite componenent.
-   *  IT IS HIGHLY RECOMMENDED THAT YOU CHECK THE STATUS OF THE POINTER
-   *  IS IS VALID FOR A COMPONENT TO BE NULL AS THEY ARE OPTIONAL!
-   *  @return a pointer to the objects sprite component (if any)
-   */
   SpriteComponent* spriteComponent();
 
- private:
-  void free();
+  void addPhysicsComponent(vector2 v, float width, float height);
+  PhysicsComponent* physicsComponent();
+
+  bool active();
+  void active(bool a_);
+
+  vector2 position();
+  bool groundCollisionDetection(float y, float height, float dir_y);
+
+ protected:
+  int getCollisionSideRect(vector2 point, Rectangle col_shape);
+  int getCollisionSideCir(vector2 point, Circle col_shape);
+  void freeSprite();
+  void freePhysics();
   SpriteComponent* sprite_component = nullptr;
+  PhysicsComponent* physics_component = nullptr;
+
+  float speed = 0;
+  bool alive = true;
 };
