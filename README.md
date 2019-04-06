@@ -1,1 +1,2 @@
-ASGE Angry Birds template code for coursework assignment 2. 
+ASGE Angry Birds Coursework Assignment 2.
+Planning and Documentation as PDF in project folder.
