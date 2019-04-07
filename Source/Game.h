@@ -37,6 +37,7 @@ class Angry : public ASGE::OGLGame
 
   void moveBirdInCatapult();
   void releaseBird();
+  void loadNextLevel();
 
   virtual void update(const ASGE::GameTime&) override;
   virtual void render(const ASGE::GameTime&) override;
@@ -62,6 +63,7 @@ class Angry : public ASGE::OGLGame
 
   bool clicked_on_bird = false;
   bool release_bird = false;
+  bool load_next_level = false;
 
   double mouse_x = 0;
   double mouse_y = 0;

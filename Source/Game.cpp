@@ -58,7 +58,8 @@ bool Angry::init()
   mouse_callback_id =
     inputs->addCallbackFnc(ASGE::E_MOUSE_CLICK, &Angry::clickHandler, this);
 
-  if (!level.load("../../GameData/LevelData/lvl_1.txt"))
+  std::string filename = "../../GameData/LevelData/lvl_" + std::to_string(current_level) + ".txt";
+  if (!level.load(filename))
   {
     ASGE::DebugPrinter() << "Level not loaded" << std::endl;
     return false;
@@ -292,16 +293,7 @@ void Angry::keyHandler(const ASGE::SharedEventData data)
         }
         else
         {
-          current_level++;
-          changeBackground();
-          std::string filename = "../../GameData/LevelData/lvl_";
-          filename += std::to_string(current_level);
-          filename += ".txt";
-
-          if (!level.load(filename))
-          {
-            ASGE::DebugPrinter() << "Next level not loaded" << std::endl;
-          }
+          load_next_level = true;
         }
       }
 
@@ -340,6 +332,20 @@ void Angry::clickHandler(const ASGE::SharedEventData data)
   }
 }
 
+void Angry::loadNextLevel()
+{
+  current_level++;
+  changeBackground();
+  std::string filename = "../../GameData/LevelData/lvl_";
+  filename += std::to_string(current_level);
+  filename += ".txt";
+
+  if (!level.load(filename))
+  {
+    ASGE::DebugPrinter() << "Next level not loaded" << std::endl;
+  }
+}
+
 /**
 *   @brief   Updates the scene
 *   @details Prepares the renderer subsystem before drawing the
@@ -351,6 +357,13 @@ void Angry::update(const ASGE::GameTime& game_time)
 {
   // make sure you use delta time in any movement calculations!
   // auto dt_sec = game_time.delta.count() / 1000.0;
+
+  if (load_next_level)
+  {
+    loadNextLevel();
+    restart();
+    load_next_level = false;
+  }
 
   if (!in_menu && !game_won && !game_over)
   {
