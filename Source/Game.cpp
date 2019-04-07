@@ -58,7 +58,8 @@ bool Angry::init()
   mouse_callback_id =
     inputs->addCallbackFnc(ASGE::E_MOUSE_CLICK, &Angry::clickHandler, this);
 
-  std::string filename = "../../GameData/LevelData/lvl_" + std::to_string(current_level) + ".txt";
+  std::string filename =
+    "../../GameData/LevelData/lvl_" + std::to_string(current_level) + ".txt";
   if (!level.load(filename))
   {
     ASGE::DebugPrinter() << "Level not loaded" << std::endl;

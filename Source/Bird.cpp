@@ -90,26 +90,42 @@ void Bird::collision(
           vector2(physics_component->linearVelocity().x * 2,
                   physics_component->linearVelocity().y * 2));
 
-        switch(side)
+        switch (side)
         {
           default:
             break;
           case 1:
-            physics_component->linearVelocity(vector2(-physics_component->linearVelocity().x * 0.4f, physics_component->linearVelocity().y * 0.4f));
-                sprite_component->getSprite()->xPos(blocks[i].spriteComponent()->getSprite()->xPos() - sprite_component->getSprite()->width());
-                break;
+            physics_component->linearVelocity(
+              vector2(-physics_component->linearVelocity().x * 0.4f,
+                      physics_component->linearVelocity().y * 0.4f));
+            sprite_component->getSprite()->xPos(
+              blocks[i].spriteComponent()->getSprite()->xPos() -
+              sprite_component->getSprite()->width());
+            break;
           case 2:
-            physics_component->linearVelocity(vector2(-physics_component->linearVelocity().x * 0.4f, physics_component->linearVelocity().y * 0.4f));
-                sprite_component->getSprite()->xPos(blocks[i].spriteComponent()->getSprite()->xPos() + blocks[i].spriteComponent()->getSprite()->width());
-                break;
+            physics_component->linearVelocity(
+              vector2(-physics_component->linearVelocity().x * 0.4f,
+                      physics_component->linearVelocity().y * 0.4f));
+            sprite_component->getSprite()->xPos(
+              blocks[i].spriteComponent()->getSprite()->xPos() +
+              blocks[i].spriteComponent()->getSprite()->width());
+            break;
           case 3:
-            physics_component->linearVelocity(vector2(physics_component->linearVelocity().x * 0.4f, -physics_component->linearVelocity().y * 0.4f));
-                sprite_component->getSprite()->yPos(blocks[i].spriteComponent()->getSprite()->yPos() - sprite_component->getSprite()->height());
-                break;
+            physics_component->linearVelocity(
+              vector2(physics_component->linearVelocity().x * 0.4f,
+                      -physics_component->linearVelocity().y * 0.4f));
+            sprite_component->getSprite()->yPos(
+              blocks[i].spriteComponent()->getSprite()->yPos() -
+              sprite_component->getSprite()->height());
+            break;
           case 4:
-            physics_component->linearVelocity(vector2(physics_component->linearVelocity().x * 0.4f, -physics_component->linearVelocity().y * 0.4f));
-                sprite_component->getSprite()->yPos(blocks[i].spriteComponent()->getSprite()->yPos() + blocks[i].spriteComponent()->getSprite()->height());
-                break;
+            physics_component->linearVelocity(
+              vector2(physics_component->linearVelocity().x * 0.4f,
+                      -physics_component->linearVelocity().y * 0.4f));
+            sprite_component->getSprite()->yPos(
+              blocks[i].spriteComponent()->getSprite()->yPos() +
+              blocks[i].spriteComponent()->getSprite()->height());
+            break;
         }
       }
     }
