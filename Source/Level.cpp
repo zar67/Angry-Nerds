@@ -13,21 +13,21 @@ bool Level::load(std::string file_name)
   {
     // Get number of pigs, blocks and birds
     file >> bird_num;
-    if (bird_num > MAX_BIRD_NUM)
+    if (bird_num > SETTINGS::MAX_BIRD_NUM)
     {
-      bird_num = MAX_BIRD_NUM;
+      bird_num = SETTINGS::MAX_BIRD_NUM;
     }
 
     file >> pig_num;
-    if (pig_num > MAX_PIG_NUM)
+    if (pig_num > SETTINGS::MAX_PIG_NUM)
     {
-      pig_num = MAX_PIG_NUM;
+      pig_num = SETTINGS::MAX_PIG_NUM;
     }
 
     file >> block_num;
-    if (block_num > MAX_BLOCK_NUM)
+    if (block_num > SETTINGS::MAX_BLOCK_NUM)
     {
-      block_num = MAX_BLOCK_NUM;
+      block_num = SETTINGS::MAX_BLOCK_NUM;
     }
 
     char dummy;

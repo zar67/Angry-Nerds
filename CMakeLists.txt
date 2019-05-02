@@ -36,7 +36,7 @@ add_executable(
         "Source/Utility/Vector2.h"
         "Source/Utility/Vector2.cpp"
         "Source/Utility/Circle.cpp"
-        "Source/Utility/Circle.h" Source/Components/PhysicsComponent.cpp Source/Components/PhysicsComponent.h Source/Bird.cpp Source/Bird.h Source/Block.cpp Source/Block.h Source/Pig.cpp Source/Pig.h Source/Collision.cpp Source/Collision.h Source/Level.cpp Source/Level.h)
+        "Source/Utility/Circle.h" Source/Components/PhysicsComponent.cpp Source/Components/PhysicsComponent.h Source/Bird.cpp Source/Bird.h Source/Block.cpp Source/Block.h Source/Pig.cpp Source/Pig.h Source/Collision.cpp Source/Collision.h Source/Level.cpp Source/Level.h Source/GameConstants.h)
 
 ## utility scripts
 set(ENABLE_SOUND OFF CACHE BOOL "Adds SoLoud to the Project" FORCE)

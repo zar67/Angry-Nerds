@@ -5,8 +5,6 @@
 #include "Utility/Circle.h"
 #include "Utility/Vector2.h"
 
-struct Circle;
-
 struct Rectangle
 {
   bool isInside(float x_, float y_) const;

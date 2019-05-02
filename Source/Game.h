@@ -6,10 +6,9 @@
 #include "Bird.h"
 #include "Block.h"
 #include "Components/GameObject.h"
+#include "GameConstants.h"
 #include "Level.h"
 #include "Pig.h"
-
-const int NUM_OF_LEVELS = 2;
 
 /**
  *  An OpenGL Game based on ASGE.
@@ -38,6 +37,11 @@ class Angry : public ASGE::OGLGame
   void moveBirdInCatapult();
   void releaseBird();
   void loadNextLevel();
+  void setupCatapult();
+
+  void renderGameWon();
+  void renderGame();
+  void renderGameOver();
 
   virtual void update(const ASGE::GameTime&) override;
   virtual void render(const ASGE::GameTime&) override;
@@ -53,9 +57,9 @@ class Angry : public ASGE::OGLGame
   Level level;
   int current_level = 1;
 
-  Bird birds[MAX_BIRD_NUM];
-  Block blocks[MAX_BLOCK_NUM];
-  Pig pigs[MAX_PIG_NUM];
+  Bird birds[SETTINGS::MAX_BIRD_NUM];
+  Block blocks[SETTINGS::MAX_BLOCK_NUM];
+  Pig pigs[SETTINGS::MAX_PIG_NUM];
 
   int current_bird = 0;
 
@@ -68,6 +72,7 @@ class Angry : public ASGE::OGLGame
   double mouse_x = 0;
   double mouse_y = 0;
 
+  //@Feedback: use a game state system instead
   bool in_menu = true;
   bool game_over = false;
   bool game_won = false;

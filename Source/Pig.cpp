@@ -30,9 +30,9 @@ void Pig::collision(Block* blocks, int block_num)
   // Blocks Collision
   for (int i = 0; i < block_num; i++)
   {
-    vector2 point = collision_detection.AABBCircle(
-      blocks[i].spriteComponent()->getBoundingBox(),
-      sprite_component->getBoundingCircle());
+    vector2 point =
+      Collision::AABBCircle(blocks[i].spriteComponent()->getBoundingBox(),
+                            sprite_component->getBoundingCircle());
 
     if (point.x != 0 || point.y != 0)
     {

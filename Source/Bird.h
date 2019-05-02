@@ -5,10 +5,8 @@
 #ifndef ANGRYNERDS_BIRD_H
 #define ANGRYNERDS_BIRD_H
 
-#include "Block.h"
 #include "Collision.h"
 #include "Components/GameObject.h"
-#include "Pig.h"
 #include "Utility/Circle.h"
 
 class Block;
@@ -18,6 +16,8 @@ class Bird : public GameObject
 {
  public:
   Bird() = default;
+
+  //@Feedback: good work!!! saves the leak.
   ~Bird() override = default;
 
   void update(double delta_time,
@@ -32,9 +32,11 @@ class Bird : public GameObject
   void released(bool r_);
 
  private:
+  //@Feedback; decouple Birds from the game. You should manage the collision
+  // checks in the game not the Bird class. A Bird class should not know about
+  // blocks or pigs, but the game should.
   void
   collision(Block* blocks, int block_num, Pig* pigs, int pig_num, int* score);
-  Collision collision_detection;
   float friction = 0.25f;
   bool free = false;
 };

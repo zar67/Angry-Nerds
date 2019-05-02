@@ -36,9 +36,9 @@ void Block::collision(Block* blocks, int block_num)
         blocks[i].spriteComponent()->getSprite()->yPos() !=
           sprite_component->getSprite()->yPos())
     {
-      vector2 point = collision_detection.AABBAABB(
-        blocks[i].spriteComponent()->getBoundingBox(),
-        sprite_component->getBoundingBox());
+      vector2 point =
+        Collision::AABBAABB(blocks[i].spriteComponent()->getBoundingBox(),
+                            sprite_component->getBoundingBox());
 
       if (point.x != 0 || point.y != 0)
       {

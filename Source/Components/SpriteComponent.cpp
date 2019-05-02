@@ -66,6 +66,7 @@ Rectangle SpriteComponent::getBoundingBox() const
   return bounding_box;
 }
 
+//@Feedback: this is a good place to store this additional functionality
 Circle SpriteComponent::getBoundingCircle() const
 {
   Circle bounding_circle;

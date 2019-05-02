@@ -8,10 +8,10 @@
 #include "Utility/Rectangle.h"
 #include "Utility/Vector2.h"
 
-struct Rectangle;
-
 struct Circle
 {
+  //@Feedback: just remove these two isInside functions and place
+  // them in a namespace or part of the main game .
   bool isInside(float x_, float y_) const;
 
   float x = 0;

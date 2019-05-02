@@ -22,7 +22,6 @@ class Pig : public GameObject
 
  private:
   void collision(Block* blocks, int block_num);
-  Collision collision_detection;
   float friction = 0.25f;
 };
 

@@ -3,6 +3,7 @@
 //
 
 #include "Bird.h"
+#include "Pig.h"
 
 /**
  *   @brief   Sets up the bird object
@@ -44,9 +45,9 @@ void Bird::collision(
   {
     if (pigs[i].active())
     {
-      vector2 point = collision_detection.CircleCircle(
-        sprite_component->getBoundingCircle(),
-        pigs[i].spriteComponent()->getBoundingCircle());
+      vector2 point =
+        Collision::CircleCircle(sprite_component->getBoundingCircle(),
+                                pigs[i].spriteComponent()->getBoundingCircle());
 
       if ((point.x != 0 || point.y != 0) &&
           getCollisionSideCir(point, sprite_component->getBoundingCircle()) !=
@@ -69,9 +70,9 @@ void Bird::collision(
   // Block collision
   for (int i = 0; i < block_num; i++)
   {
-    vector2 point = collision_detection.AABBCircle(
-      blocks[i].spriteComponent()->getBoundingBox(),
-      sprite_component->getBoundingCircle());
+    vector2 point =
+      Collision::AABBCircle(blocks[i].spriteComponent()->getBoundingBox(),
+                            sprite_component->getBoundingCircle());
 
     if (point.x != 0 || point.y != 0)
     {

@@ -79,13 +79,7 @@ bool Angry::init()
     return false;
   }
 
-  if (catapult.addSpriteComponent(renderer.get(), "data/Textures/catapult.png"))
-  {
-    catapult.spriteComponent()->getSprite()->xPos(170);
-    catapult.spriteComponent()->getSprite()->yPos(680);
-    catapult.spriteComponent()->getSprite()->height(220);
-    catapult.spriteComponent()->getSprite()->width(220);
-  }
+  setupCatapult();
 
   if (!setupBirds())
   {
@@ -109,6 +103,17 @@ bool Angry::init()
   return true;
 }
 
+void Angry::setupCatapult()
+{
+  if (catapult.addSpriteComponent(renderer.get(), "data/Textures/catapult.png"))
+  {
+    catapult.spriteComponent()->getSprite()->xPos(170);
+    catapult.spriteComponent()->getSprite()->yPos(680);
+    catapult.spriteComponent()->getSprite()->height(220);
+    catapult.spriteComponent()->getSprite()->width(220);
+  }
+}
+
 bool Angry::loadBackground()
 {
   return background_layer.addSpriteComponent(renderer.get(),
@@ -127,7 +132,7 @@ bool Angry::changeBackground()
 
 bool Angry::setupBirds()
 {
-  for (int i = 0; i < MAX_BIRD_NUM; i++)
+  for (int i = 0; i < SETTINGS::MAX_BIRD_NUM; i++)
   {
     if (birds[i].addSpriteComponent(renderer.get(), "data/Textures/parrot.png"))
     {
@@ -144,7 +149,7 @@ bool Angry::setupBirds()
 
 bool Angry::setupPigs()
 {
-  for (int i = 0; i < MAX_PIG_NUM; i++)
+  for (int i = 0; i < SETTINGS::MAX_PIG_NUM; i++)
   {
     if (pigs[i].addSpriteComponent(renderer.get(), "data/Textures/duck.png"))
     {
@@ -161,7 +166,7 @@ bool Angry::setupPigs()
 
 bool Angry::setupBlocks()
 {
-  for (int i = 0; i < MAX_BLOCK_NUM; i++)
+  for (int i = 0; i < SETTINGS::MAX_BLOCK_NUM; i++)
   {
     if (blocks[i].addSpriteComponent(renderer.get(),
                                      "data/Textures/Wood/1x1.png"))
@@ -287,7 +292,7 @@ void Angry::keyHandler(const ASGE::SharedEventData data)
     {
       if (game_won)
       {
-        if (current_level == NUM_OF_LEVELS)
+        if (current_level == SETTINGS::NUM_OF_LEVELS)
         {
           in_menu = true;
           current_level = 1;
@@ -503,62 +508,74 @@ void Angry::render(const ASGE::GameTime& game_time)
   }
   else
   {
-    renderer->renderSprite(*background_layer.spriteComponent()->getSprite());
-
-    for (int i = 0; i < level.bird_num; i++)
-    {
-      renderer->renderSprite(*birds[i].spriteComponent()->getSprite());
-    }
-
-    renderer->renderSprite(*catapult.spriteComponent()->getSprite());
-
-    for (int i = 0; i < level.block_num; i++)
-    {
-      renderer->renderSprite(*blocks[i].spriteComponent()->getSprite());
-    }
-
-    for (int i = 0; i < level.pig_num; i++)
-    {
-      if (pigs[i].active())
-      {
-        renderer->renderSprite(*pigs[i].spriteComponent()->getSprite());
-      }
-    }
-
-    std::string score_txt = "Score: " + std::to_string(score);
-    renderer->renderText(score_txt, 860, 50, 1.5f, ASGE::COLOURS::DARKBLUE);
+    renderGame();
 
     if (game_won)
     {
-      if (current_level == NUM_OF_LEVELS)
-      {
-        renderer->renderText("Congratulations! You've won!",
-                             740,
-                             125,
-                             1.5f,
-                             ASGE::COLOURS::DARKBLUE);
-        renderer->renderText("Press SPACE to return to the menu",
-                             710,
-                             150,
-                             1.5f,
-                             ASGE::COLOURS::DARKBLUE);
-      }
-      else
-      {
-        renderer->renderText("Congratulations! You've completed the level!",
-                             700,
-                             125,
-                             1.5f,
-                             ASGE::COLOURS::DARKBLUE);
-        renderer->renderText(
-          "Press SPACE to continue", 760, 150, 1.5f, ASGE::COLOURS::DARKBLUE);
-      }
+      renderGameWon();
     }
     else if (game_over)
     {
-      renderer->renderText("You Lose", 860, 125, 1.5f, ASGE::COLOURS::DARKBLUE);
-      renderer->renderText(
-        "Press SPACE to restart", 760, 150, 1.5f, ASGE::COLOURS::DARKBLUE);
+      renderGameOver();
     }
+  }
+}
+
+void Angry::renderGameOver()
+{
+  renderer->renderText("You Lose", 860, 125, 1.5f, ASGE::COLOURS::DARKBLUE);
+  renderer->renderText(
+    "Press SPACE to restart", 760, 150, 1.5f, ASGE::COLOURS::DARKBLUE);
+}
+
+void Angry::renderGame() const
+{
+  renderer->renderSprite(*background_layer.spriteComponent()->getSprite());
+
+  for (int i = 0; i < level.bird_num; i++)
+  {
+    renderer->renderSprite(*birds[i].spriteComponent()->getSprite());
+  }
+
+  renderer->renderSprite(*catapult.spriteComponent()->getSprite());
+
+  for (int i = 0; i < level.block_num; i++)
+  {
+    renderer->renderSprite(*blocks[i].spriteComponent()->getSprite());
+  }
+
+  for (int i = 0; i < level.pig_num; i++)
+  {
+    if (pigs[i].active())
+    {
+      renderer->renderSprite(*pigs[i].spriteComponent()->getSprite());
+    }
+  }
+
+  std::string score_txt = "Score: " + std::to_string(score);
+  renderer->renderText(score_txt, 860, 50, 1.5f, ASGE::COLOURS::DARKBLUE);
+}
+
+void Angry::renderGameWon()
+{
+  if (current_level == SETTINGS::NUM_OF_LEVELS)
+  {
+    renderer->renderText(
+      "Congratulations! You've won!", 740, 125, 1.5f, ASGE::COLOURS::DARKBLUE);
+    renderer->renderText("Press SPACE to return to the menu",
+                         710,
+                         150,
+                         1.5f,
+                         ASGE::COLOURS::DARKBLUE);
+  }
+  else
+  {
+    renderer->renderText("Congratulations! You've completed the level!",
+                         700,
+                         125,
+                         1.5f,
+                         ASGE::COLOURS::DARKBLUE);
+    renderer->renderText(
+      "Press SPACE to continue", 760, 150, 1.5f, ASGE::COLOURS::DARKBLUE);
   }
 }

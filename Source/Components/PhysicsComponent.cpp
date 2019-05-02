@@ -12,6 +12,8 @@
 void PhysicsComponent::initPhysics(vector2 velocity, float w_, float h_)
 {
   linear_velocity = velocity;
+
+  //@Feedback: why are these here?
   width = w_;
   height = h_;
 }
